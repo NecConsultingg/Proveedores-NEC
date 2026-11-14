@@ -47,5 +47,6 @@ El diseño de usuarios, permisos, categorías y cupos está en `../DISENO.md`.
 ## Publicación
 
 El proyecto `proveedores-nec` de Vercel está conectado a este repositorio: cada cambio que llega a la rama `main`
-se publica solo en https://proveedores-nec.vercel.app (y en proveedoresnec.com cuando se conecte el dominio).
-Las variables de Supabase viven en Vercel → proveedores-nec → Settings → Environment Variables.
+se publica solo en **https://proveedoresnec.com** (www redirige al dominio principal; también responde en
+https://proveedores-nec.vercel.app). El dominio está comprado en Vercel con renovación automática.
+Las variables de Supabase y `NEXT_PUBLIC_SITE_URL` viven en Vercel → proveedores-nec → Settings → Environment Variables.
