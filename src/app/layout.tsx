@@ -3,18 +3,15 @@ import { Analytics } from "@vercel/analytics/next";
 import { Crimson_Pro, Marcellus_SC } from "next/font/google";
 import { Encabezado } from "@/components/encabezado";
 import { Pie } from "@/components/pie";
+import { PERMITIR_INDEXACION, SITIO } from "@/lib/config";
 import "./globals.css";
 
 const marcellus = Marcellus_SC({ variable: "--font-marcellus", weight: "400", subsets: ["latin"] });
 const crimson = Crimson_Pro({ variable: "--font-crimson", subsets: ["latin"] });
 
-// Dirección pública del sitio, para que los enlaces compartidos (WhatsApp, Facebook) muestren la vista previa.
-const SITIO =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000");
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITIO),
+  robots: PERMITIR_INDEXACION ? { index: true, follow: true } : { index: false, follow: false },
   openGraph: { type: "website", locale: "es_MX", siteName: "Directorio de proveedores NEC" },
   title: {
     default: "Directorio de proveedores NEC · Texmelucan",

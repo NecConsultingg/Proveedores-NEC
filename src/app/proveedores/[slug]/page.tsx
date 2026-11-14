@@ -15,7 +15,12 @@ export async function generateMetadata({ params }: PageProps<"/proveedores/[slug
   const { directorio, proveedor: p } = await obtenerProveedor((await params).slug);
   if (!p) return {};
   const esp = directorio.categorias.find((c) => c.id === p.especialidadId);
-  return { title: `${p.nombre} · ${esp?.nombre ?? "Proveedor"}` };
+  return {
+    title: `${p.nombre} · ${esp?.nombre ?? "Proveedor"}`,
+    alternates: { canonical: `/proveedores/${p.slug}` },
+    // Los proveedores de demostración nunca se indexan.
+    ...(p.demo ? { robots: { index: false, follow: false } } : {}),
+  };
 }
 
 const mesAnio = (iso: string) =>

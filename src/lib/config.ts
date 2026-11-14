@@ -22,3 +22,12 @@ export const RESPONSABLE = {
   domicilio: null as string | null, // pendiente: lo exige la ley de datos personales en el aviso de privacidad
   correo: "necconsultingg@gmail.com",
 };
+
+// Dirección pública del sitio (vista previa al compartir, sitemap).
+export const SITIO =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000");
+
+// Indexación en Google y otros buscadores. APAGADA mientras haya datos de demostración y legales en borrador.
+// Para encenderla: en Vercel, NEXT_PUBLIC_PERMITIR_INDEXACION=si (producción) y volver a publicar.
+export const PERMITIR_INDEXACION = process.env.NEXT_PUBLIC_PERMITIR_INDEXACION === "si";
