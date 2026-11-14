@@ -43,3 +43,9 @@ El diseño de usuarios, permisos, categorías y cupos está en `../DISENO.md`.
 - `src/app/` páginas: inicio y directorio, `proveedores/[slug]`, `como-verificamos`, `quiero-ser-auditado`, legales.
 - `src/lib/datos.ts` lectura y escritura (Supabase o datos de ejemplo).
 - `src/lib/config.ts` fechas del calendario y leyendas.
+
+## Publicación
+
+El proyecto `proveedores-nec` de Vercel está conectado a este repositorio: cada cambio que llega a la rama `main`
+se publica solo en https://proveedores-nec.vercel.app (y en proveedoresnec.com cuando se conecte el dominio).
+Las variables de Supabase viven en Vercel → proveedores-nec → Settings → Environment Variables.
