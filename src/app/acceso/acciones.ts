@@ -28,10 +28,14 @@ export async function enviarEnlace(_prev: EstadoAcceso, fd: FormData): Promise<E
   if (esEquipo) {
     const h = await headers();
     const origen = `${h.get("x-forwarded-proto") ?? "https"}://${h.get("host")}`;
-    const supabase = await supabaseConSesion();
-    const { error: errorEnvio } = await supabase.auth.signInWithOtp({
+    // Flujo «implícito»: el enlace trae la sesión y funciona aunque se abra en otro dispositivo o navegador
+    // (por ejemplo, Gmail en el celular). La página /auth/confirmar la guarda.
+    const enlace = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!, {
+      auth: { flowType: "implicit", persistSession: false, autoRefreshToken: false },
+    });
+    const { error: errorEnvio } = await enlace.auth.signInWithOtp({
       email: correo,
-      options: { emailRedirectTo: `${origen}/auth/callback?next=/panel`, shouldCreateUser: true },
+      options: { emailRedirectTo: `${origen}/auth/confirmar`, shouldCreateUser: true },
     });
     if (errorEnvio) {
       console.error("No se pudo enviar el enlace", errorEnvio);
