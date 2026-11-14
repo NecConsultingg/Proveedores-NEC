@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Directorio de proveedores NEC
 
-## Getting Started
+Sitio web (PWA) del directorio de proveedores. Piloto: diciembre 2026.
 
-First, run the development server:
+## Arrancar en tu computadora
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre http://localhost:3000. Necesita `.env.local` con los datos de Supabase (ver abajo).
+El diseño de usuarios, permisos, categorías y cupos está en `../DISENO.md`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Conectar Supabase
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Crea un proyecto en Supabase.
+2. En **SQL Editor**, ejecuta en orden los archivos de `supabase/migrations/` (0001, 0002, 0003).
+3. Copia `.env.example` como `.env.local` y llena la URL y la publishable key (Project Settings → API Keys).
+4. Da de alta a los proveedores en **Table Editor → proveedores**: elige su `especialidad_id` (una subcategoría de
+   `categorias`). Para que aparezca: `publicado = true` y `consentimiento_publicacion_en` con la fecha en que firmó.
+   Sus categorías secundarias (máx. 2) van en `proveedor_categorias`, sus modelos en `catalogo_items` (con
+   `categoria_id` y `publicos`) y sus ubicaciones en `ubicaciones` (sin `lat`/`lng` = solo se publica la zona).
+5. Las solicitudes de «Quiero ser auditado» llegan a la tabla `solicitudes_auditoria`.
 
-## Learn More
+## Reglas importantes
 
-To learn more about Next.js, take a look at the following resources:
+- **Datos de demostración:** Supabase tiene 12 proveedores ficticios (`demo = true`, cargados con `supabase/demo.sql`).
+  Mientras existan, el sitio muestra un aviso amarillo. **Antes del lanzamiento**, bórralos en el SQL Editor:
+  `delete from public.proveedores where demo;` (su catálogo se borra solo).
+- **Fotos:** súbelas en Supabase → Storage → `catalogo` (máx. 5 MB, jpg/png/webp) y pega la URL pública en
+  `foto_portada_url` o en `catalogo_items.foto_url`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- En el piloto, todos los proveedores van con `estado_sello = 'aliado'`. **No** usar `vigente` («Verificado por
+  NEC») hasta que pasen la auditoría de febrero 2027.
+- El aviso de privacidad y los términos son **borradores**: deben revisarse con abogado antes de publicar.
+- La base de datos no deja publicar más proveedores que el cupo de su especialidad.
+- La función `verificar_contacto` es pública a propósito (la usa «Verificar número»); solo responde nombre y tipo de
+  coincidencia, nunca la CLABE completa. Supabase la marca como advertencia: es esperado.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Estructura
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `src/app/` páginas: inicio y directorio, `proveedores/[slug]`, `como-verificamos`, `quiero-ser-auditado`, legales.
+- `src/lib/datos.ts` lectura y escritura (Supabase o datos de ejemplo).
+- `src/lib/config.ts` fechas del calendario y leyendas.
