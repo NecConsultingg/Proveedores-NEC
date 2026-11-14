@@ -14,6 +14,7 @@ export function Pie() {
             <Link href="/quiero-ser-auditado" className="hover:text-white">Quiero ser auditado</Link>
             <Link href="/aviso-de-privacidad" className="hover:text-white">Aviso de privacidad</Link>
             <Link href="/terminos" className="hover:text-white">Términos y condiciones</Link>
+            <Link href="/acceso" className="mt-2 text-xs text-humo/50 hover:text-white">Acceso equipo NEC</Link>
           </div>
         </div>
         <p className="text-sm leading-relaxed">{AVISO_LEGAL}</p>

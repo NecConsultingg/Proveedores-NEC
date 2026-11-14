@@ -1,6 +1,6 @@
 import "server-only";
 import { createClient } from "@supabase/supabase-js";
-import { cacheLife } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 import type { Categoria, Directorio, Proveedor, Publico, SolicitudAuditoria, Subcategoria } from "./tipos";
 
 function supabase() {
@@ -99,6 +99,7 @@ function aProveedor(f: FilaProveedor): Proveedor {
 export async function obtenerDirectorio(): Promise<Directorio> {
   "use cache";
   cacheLife("minutes");
+  cacheTag("directorio"); // el panel NEC lo refresca al aprobar cambios
   const db = supabase();
   const [cats, provs] = await Promise.all([
     db.from("categorias").select("id,parent_id,nivel,slug,nombre,cupo,orden").order("orden"),

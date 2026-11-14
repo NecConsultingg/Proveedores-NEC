@@ -23,6 +23,18 @@ El diseño de usuarios, permisos, categorías y cupos está en `../DISENO.md`.
    `categoria_id` y `publicos`) y sus ubicaciones en `ubicaciones` (sin `lat`/`lng` = solo se publica la zona).
 5. Las solicitudes de «Quiero ser auditado» llegan a la tabla `solicitudes_auditoria`.
 
+## Panel NEC
+
+- Entrada: **proveedoresnec.com/acceso**. Se escribe el correo y llega un enlace de acceso (sin contraseña).
+  Solo reciben enlace los correos dados de alta en la tabla `equipo` y activos.
+- Tres niveles: **staff** (propone), **administrador medio** (aprueba altas y ediciones; deja sellos en borrador;
+  propone bajas) y **superadministrador** (autoriza sellos y bajas; edita directo; administra el equipo).
+- Las reglas viven en la base de datos (`supabase/migrations/0004_panel_nec.sql`): las tablas `equipo`, `cambios`
+  y `bitacora` no se leen directo; todo pasa por funciones `panel_*` que revisan el nivel. Supabase marca esas
+  funciones como advertencia de seguridad: es esperado.
+- Configuración necesaria en Supabase → Authentication → URL Configuration: Site URL `https://proveedoresnec.com`
+  y Redirect URLs `https://proveedoresnec.com/**` y `http://localhost:3000/**`.
+
 ## Reglas importantes
 
 - **Datos de demostración:** Supabase tiene 12 proveedores ficticios (`demo = true`, cargados con `supabase/demo.sql`).
