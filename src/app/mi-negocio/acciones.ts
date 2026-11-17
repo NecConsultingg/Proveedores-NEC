@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { rpc } from "@/lib/panel";
 import type { EstadoAccion } from "@/app/panel/acciones";
@@ -95,4 +95,44 @@ export async function registrarNegocio(_prev: EstadoAccion, fd: FormData): Promi
   }
   revalidatePath("/mi-negocio", "layout");
   redirect("/mi-negocio?registro=1");
+}
+
+// ---------- Catálogo ----------
+
+export type Modelo = {
+  id?: string;
+  nombre: string;
+  descripcion: string;
+  precio: string;
+  fotoUrl: string;
+  publicos: string[];
+};
+
+export async function guardarModelo(m: Modelo): Promise<EstadoAccion> {
+  try {
+    await rpc("proveedor_catalogo_guardar", {
+      item: m.id ?? null,
+      p_nombre: m.nombre,
+      p_descripcion: m.descripcion,
+      p_precio: m.precio,
+      p_foto_url: m.fotoUrl,
+      p_publicos: m.publicos,
+    });
+    revalidatePath("/mi-negocio/catalogo");
+    updateTag("directorio"); // el perfil público se actualiza al momento
+    return { ok: true, mensaje: "Listo, ya se ve en tu perfil del directorio." };
+  } catch (e) {
+    return { ok: false, mensaje: e instanceof Error ? e.message : "No pudimos guardar el modelo." };
+  }
+}
+
+export async function borrarModelo(id: string): Promise<EstadoAccion & { fotoUrl?: string }> {
+  try {
+    const r = await rpc<{ foto_url: string | null }>("proveedor_catalogo_borrar", { item: id });
+    revalidatePath("/mi-negocio/catalogo");
+    updateTag("directorio");
+    return { ok: true, mensaje: "Modelo borrado.", fotoUrl: r.foto_url ?? undefined };
+  } catch (e) {
+    return { ok: false, mensaje: e instanceof Error ? e.message : "No pudimos borrar el modelo." };
+  }
 }

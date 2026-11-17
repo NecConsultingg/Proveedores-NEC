@@ -199,6 +199,18 @@ export async function activarCuentaProveedor(_prev: EstadoAccion, fd: FormData):
 }
 
 // Alta con cuenta en un paso: solo correo, nombre y especialidad. El proveedor llena lo demás al entrar.
+export async function resolverModelo(_prev: EstadoAccion, fd: FormData): Promise<EstadoAccion> {
+  try {
+    await rpc("panel_catalogo_resolver", {
+      item: String(fd.get("item")), aprobar: fd.get("aprobar") === "si", comentario: String(fd.get("comentario") ?? "") || null,
+    });
+    refrescar();
+    return { ok: true, mensaje: fd.get("aprobar") === "si" ? "Listo: se vuelve a mostrar en su perfil." : "Oculto; el proveedor verá tu comentario." };
+  } catch (e) {
+    return fallo(e);
+  }
+}
+
 export async function altaConCuenta(_prev: EstadoCuenta, fd: FormData): Promise<EstadoCuenta> {
   try {
     const r = await rpc<{ correo: string; contrasena: string; proveedor_id: string }>("panel_alta_con_cuenta", {

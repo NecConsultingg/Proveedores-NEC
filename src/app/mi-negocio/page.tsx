@@ -35,6 +35,13 @@ export default async function MiNegocioInicio({ searchParams }: PageProps<"/mi-n
         <Dato titulo="En el directorio" valor={n.publicado ? "Publicado" : "Aún no publicado"} />
         <Dato titulo="Próxima revisión" valor={n.proxima_revision ? fecha(n.proxima_revision).split(",")[0] : "Por definir"} />
       </section>
+      <a href="/mi-negocio/catalogo" className="flex items-center justify-between gap-3 rounded-md border border-black/5 bg-white p-4 hover:border-marino">
+        <span>
+          <span className="font-semibold">Mi catálogo</span>
+          <span className="block text-sm text-pizarra">Sube hasta 12 modelos con foto; se ven al momento en tu perfil.</span>
+        </span>
+        <span aria-hidden="true">→</span>
+      </a>
       {n.publicado && (
         <p>
           <a href={`/proveedores/${n.slug}`} target="_blank" className="underline">Ver mi perfil público ↗</a>

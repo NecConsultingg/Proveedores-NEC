@@ -31,6 +31,7 @@ async function Marco({ children }: { children: React.ReactNode }) {
         </div>
         <nav className="flex flex-wrap items-center gap-4 text-sm">
           {!n.debe_cambiar && <Link href="/mi-negocio" className="underline">Inicio</Link>}
+          {!n.debe_cambiar && !n.falta_registro && <Link href="/mi-negocio/catalogo" className="underline">Mi catálogo</Link>}
           {!n.debe_cambiar && <Link href="/mi-negocio/contrasena" className="underline">Cambiar contraseña</Link>}
           <form action={salir}>
             <button className="underline">Cerrar sesión</button>
