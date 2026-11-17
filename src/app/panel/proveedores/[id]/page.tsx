@@ -4,9 +4,11 @@ import { CAMPOS, ESTADO_CAMBIO, TIPO_CAMBIO, fecha, obtenerMiembro, rango, rpc, 
 import { proponerBaja, proponerCambio, proponerSello } from "../../acciones";
 import { FormaAccion } from "../../forma-accion";
 import { CampoMotivo, CamposProveedor, type Especialidad } from "../campos";
+import { CuentaProveedor, type Cuenta } from "../cuenta";
 import type { ProveedorPanel } from "../page";
 
 type Detalle = ProveedorPanel & {
+  cuenta: Cuenta;
   cambios: { id: string; tipo: string; estado: string; datos: Record<string, unknown>; motivo: string; propuesto_en: string; propuesto_por: string; comentario_revision: string | null }[];
 };
 
@@ -59,6 +61,8 @@ export default async function DetalleProveedor({ params }: PageProps<"/panel/pro
           )}
         </FormaAccion>
       </section>
+
+      {medioOMas && <CuentaProveedor proveedorId={p.id} negocio={p.nombre} cuenta={p.cuenta} />}
 
       {medioOMas && (
         <div className="grid gap-6 lg:grid-cols-2">

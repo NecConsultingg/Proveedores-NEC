@@ -150,3 +150,43 @@ export async function activarMiembro(_prev: EstadoAccion, fd: FormData): Promise
     return fallo(e);
   }
 }
+
+// ---------- Cuentas de proveedor ----------
+
+export type EstadoCuenta = EstadoAccion & { correo?: string; contrasena?: string };
+
+export async function crearCuentaProveedor(_prev: EstadoCuenta, fd: FormData): Promise<EstadoCuenta> {
+  try {
+    const r = await rpc<{ correo: string; contrasena: string }>("panel_crear_cuenta_proveedor", {
+      proveedor: String(fd.get("proveedor_id")), correo: String(fd.get("correo") ?? ""),
+    });
+    revalidatePath("/panel", "layout");
+    return { ok: true, mensaje: "Cuenta creada.", ...r };
+  } catch (e) {
+    return fallo(e);
+  }
+}
+
+export async function restablecerCuentaProveedor(_prev: EstadoCuenta, fd: FormData): Promise<EstadoCuenta> {
+  try {
+    const r = await rpc<{ correo: string; contrasena: string }>("panel_restablecer_cuenta_proveedor", {
+      proveedor: String(fd.get("proveedor_id")),
+    });
+    revalidatePath("/panel", "layout");
+    return { ok: true, mensaje: "Contraseña temporal nueva generada. La anterior ya no sirve.", ...r };
+  } catch (e) {
+    return fallo(e);
+  }
+}
+
+export async function activarCuentaProveedor(_prev: EstadoAccion, fd: FormData): Promise<EstadoAccion> {
+  try {
+    await rpc("panel_activar_cuenta_proveedor", {
+      proveedor: String(fd.get("proveedor_id")), p_activa: fd.get("activa") === "true",
+    });
+    revalidatePath("/panel", "layout");
+    return { ok: true, mensaje: "Listo." };
+  } catch (e) {
+    return fallo(e);
+  }
+}

@@ -22,7 +22,7 @@ export async function proxy(request: NextRequest) {
   );
 
   const { data } = await supabase.auth.getClaims();
-  if (!data?.claims && request.nextUrl.pathname.startsWith("/panel")) {
+  if (!data?.claims && (request.nextUrl.pathname.startsWith("/panel") || request.nextUrl.pathname.startsWith("/mi-negocio"))) {
     const destino = request.nextUrl.clone();
     destino.pathname = "/acceso";
     destino.search = "";
@@ -33,5 +33,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/panel/:path*", "/acceso", "/acceso/:path*", "/auth/:path*"],
+  matcher: ["/panel/:path*", "/mi-negocio/:path*", "/acceso", "/acceso/:path*", "/auth/:path*"],
 };

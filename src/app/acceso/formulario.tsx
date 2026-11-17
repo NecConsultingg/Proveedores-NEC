@@ -2,11 +2,12 @@
 
 import { createBrowserClient } from "@supabase/ssr";
 import { useState } from "react";
+import { CampoContrasena } from "@/components/campo-contrasena";
 
 const campo = "mt-1 w-full rounded border border-acero bg-white px-3 py-2.5 focus:border-marino focus:outline-none";
 
-// Entra con correo y contraseña. Se hace desde el navegador para que el límite de intentos de Supabase
-// cuente por persona (su IP) y no por el servidor.
+// Entra con correo y contraseña (equipo NEC y proveedores). Se hace desde el navegador para que el límite
+// de intentos de Supabase cuente por persona (su IP) y no por el servidor. Después manda a cada quien a su área.
 export function FormularioAcceso() {
   const [error, setError] = useState("");
   const [entrando, setEntrando] = useState(false);
@@ -21,16 +22,25 @@ export function FormularioAcceso() {
       email: String(fd.get("correo") ?? "").trim().toLowerCase(),
       password: String(fd.get("contrasena") ?? ""),
     });
-    if (!e2) {
-      window.location.replace("/panel");
+    if (e2) {
+      setEntrando(false);
+      setError(
+        /rate limit|too many/i.test(e2.message)
+          ? "Demasiados intentos. Espera unos minutos y vuelve a intentar."
+          : /banned/i.test(e2.message)
+            ? "Tu cuenta está desactivada. Escríbele al equipo NEC."
+            : "Correo o contraseña incorrectos.",
+      );
       return;
     }
+    const { data } = await supabase.rpc("mi_destino");
+    const destino = data as { tipo: "equipo" | "proveedor" | null; debe_cambiar?: boolean } | null;
+    if (destino?.tipo === "equipo") return window.location.replace("/panel");
+    if (destino?.tipo === "proveedor")
+      return window.location.replace(destino.debe_cambiar ? "/mi-negocio/contrasena" : "/mi-negocio");
+    await supabase.auth.signOut();
     setEntrando(false);
-    setError(
-      /rate limit|too many/i.test(e2.message)
-        ? "Demasiados intentos. Espera unos minutos y vuelve a intentar."
-        : "Correo o contraseña incorrectos.",
-    );
+    setError("Tu cuenta no tiene acceso o está desactivada. Escríbele al equipo NEC.");
   }
 
   return (
@@ -39,10 +49,7 @@ export function FormularioAcceso() {
         <span className="font-semibold">Correo</span>
         <input name="correo" type="email" required autoComplete="username" className={campo} />
       </label>
-      <label className="block">
-        <span className="font-semibold">Contraseña</span>
-        <input name="contrasena" type="password" required autoComplete="current-password" className={campo} />
-      </label>
+      <CampoContrasena name="contrasena" etiqueta="Contraseña" autoComplete="current-password" />
       {error && <p className="text-red-700" role="alert">{error}</p>}
       <button disabled={entrando} className="etiqueta w-full rounded bg-marino py-3 text-humo hover:bg-pizarra disabled:opacity-60">
         {entrando ? "Entrando…" : "Entrar"}
