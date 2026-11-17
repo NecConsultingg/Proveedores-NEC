@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { PaginaLegal } from "@/components/pagina-legal";
 import { RESPONSABLE } from "@/lib/config";
 
-export const metadata: Metadata = { title: "Términos y condiciones" };
+// BORRADOR legal: fuera de buscadores hasta que lo apruebe el abogado (quitar «robots» al aprobarlo).
+export const metadata: Metadata = { title: "Términos y condiciones", robots: { index: false, follow: true } };
 
 export default function Terminos() {
   return (

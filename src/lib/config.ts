@@ -27,7 +27,7 @@ export const AVISO_LEGAL =
 // El RFC no se publica: el aviso de privacidad no lo requiere.
 export const RESPONSABLE = {
   nombre: "Rubén Uriel Flores Bello",
-  domicilio: null as string | null, // pendiente: lo exige la ley de datos personales en el aviso de privacidad
+  domicilio: "Avenida Xicohtencatl #7, Tepetitla de Lardizábal, C.P. 90700, Tlaxcala, México" as string | null, // 16-nov-2026
   correo: "necconsultingg@gmail.com",
 };
 
