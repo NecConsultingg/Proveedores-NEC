@@ -8,7 +8,7 @@ import { supabaseConSesion } from "@/lib/supabase/servidor";
 export type EstadoAcceso = { enviado: boolean; mensaje: string };
 
 const RESPUESTA_NEUTRA =
-  "Si tu correo pertenece al equipo NEC, en unos minutos te llega un enlace para entrar. Revisa también la carpeta de spam.";
+  "Si tu correo pertenece al equipo NEC, en unos minutos te llega un enlace para crear tu contraseña. Revisa también la carpeta de spam.";
 
 export async function enviarEnlace(_prev: EstadoAcceso, fd: FormData): Promise<EstadoAcceso> {
   const correo = String(fd.get("correo") ?? "").trim().toLowerCase();

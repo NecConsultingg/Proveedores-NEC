@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Suspense } from "react";
 import { FormularioAcceso } from "./formulario";
 
@@ -14,15 +15,16 @@ export default function Acceso({ searchParams }: PageProps<"/acceso">) {
     <div className="mx-auto max-w-md px-5 py-16">
       <p className="etiqueta text-pizarra">Uso interno</p>
       <h1 className="titulo mt-2 text-3xl">Panel NEC</h1>
-      <p className="mt-3 text-pizarra">
-        Escribe tu correo y te enviamos un enlace para entrar. No necesitas contraseña. El enlace sirve una sola vez.
-      </p>
+      <p className="mt-3 text-pizarra">Entra con tu correo y tu contraseña.</p>
       <Suspense>
         <AvisoError searchParams={searchParams} />
       </Suspense>
       <div className="mt-6">
         <FormularioAcceso />
       </div>
+      <p className="mt-6 text-sm">
+        <Link href="/acceso/recuperar" className="underline">¿Primera vez o se te olvidó la contraseña?</Link>
+      </p>
     </div>
   );
 }

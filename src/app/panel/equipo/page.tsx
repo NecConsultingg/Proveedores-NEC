@@ -53,7 +53,7 @@ export default async function Equipo() {
 
       <section className="rounded-md border border-black/5 bg-white p-6">
         <h2 className="titulo text-xl">Agregar integrante</h2>
-        <p className="mt-1 text-sm text-pizarra">Entra en proveedoresnec.com/acceso con el correo que registres aquí. Una cuenta por persona.</p>
+        <p className="mt-1 text-sm text-pizarra">La primera vez, la persona abre proveedoresnec.com/acceso/recuperar con el correo que registres aquí y crea su propia contraseña (nadie más la conoce). Una cuenta por persona.</p>
         <FormaAccion accion={altaMiembro} boton="Agregar" className="mt-4 space-y-4">
           <div className="grid gap-4 sm:grid-cols-3">
             <label className="block"><span className="text-sm font-semibold">Nombre</span><input name="nombre" required className={campo} /></label>

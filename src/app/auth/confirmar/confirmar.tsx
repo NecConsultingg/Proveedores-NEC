@@ -37,7 +37,7 @@ export function Confirmar() {
       .setSession({ access_token: accessToken, refresh_token: refreshToken })
       .then(({ error: e }) => {
         if (e) setError("No pudimos abrir tu sesión.");
-        else window.location.replace("/panel");
+        else window.location.replace("/panel/contrasena");
       });
   }, []);
 
@@ -46,7 +46,7 @@ export function Confirmar() {
       <div className="mt-3 space-y-4">
         <h1 className="titulo text-2xl">No pudimos entrar</h1>
         <p>{error} Pide un enlace nuevo; cada enlace sirve una sola vez y vence en una hora.</p>
-        <Link href="/acceso" className="etiqueta inline-block rounded bg-marino px-5 py-3 text-humo">Pedir otro enlace</Link>
+        <Link href="/acceso/recuperar" className="etiqueta inline-block rounded bg-marino px-5 py-3 text-humo">Pedir otro enlace</Link>
       </div>
     );
   }

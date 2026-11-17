@@ -16,6 +16,7 @@ const MENU: { href: string; texto: string; minimo: Nivel }[] = [
   { href: "/panel/aprobaciones", texto: "Aprobaciones", minimo: "staff" },
   { href: "/panel/equipo", texto: "Equipo", minimo: "admin_medio" },
   { href: "/panel/bitacora", texto: "Bitácora", minimo: "admin_medio" },
+  { href: "/panel/contrasena", texto: "Cambiar contraseña", minimo: "staff" },
 ];
 
 export default function LayoutPanel({ children }: LayoutProps<"/panel">) {

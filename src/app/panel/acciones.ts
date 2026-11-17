@@ -135,7 +135,7 @@ export async function altaMiembro(_prev: EstadoAccion, fd: FormData): Promise<Es
       correo: String(fd.get("correo") ?? ""), nombre: String(fd.get("nombre") ?? ""), nivel: String(fd.get("nivel")),
     });
     revalidatePath("/panel", "layout");
-    return { ok: true, mensaje: "Miembro agregado. Ya puede entrar en proveedoresnec.com/acceso con su correo." };
+    return { ok: true, mensaje: "Miembro agregado. Para entrar la primera vez, que abra proveedoresnec.com/acceso/recuperar y cree su contraseña." };
   } catch (e) {
     return fallo(e);
   }
