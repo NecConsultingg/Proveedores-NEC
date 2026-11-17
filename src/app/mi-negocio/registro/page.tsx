@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { FormaAccion } from "@/app/panel/forma-accion";
 import { CampoMaps } from "@/components/campo-maps";
+import { CampoMayoreo } from "@/components/campo-mayoreo";
 import { CamposVenta } from "@/components/campos-venta";
 import { CamposWhatsapp } from "@/components/campos-whatsapp";
 import { obtenerNegocio } from "@/lib/mi-negocio";
@@ -48,16 +49,11 @@ export default async function RegistroNegocio({ searchParams }: PageProps<"/mi-n
                 {ESTADOS.map((e) => <option key={e} value={e}>{e}</option>)}
               </select>
             </label>
-            <div className="grid grid-cols-2 gap-4">
-              <label className="block">
-                <span className="text-sm font-semibold">Años en el negocio *</span>
-                <input name="anios" required inputMode="numeric" defaultValue={n.anios || ""} className={campo} />
-              </label>
-              <label className="block">
-                <span className="text-sm font-semibold">Mayoreo desde (piezas) *</span>
-                <input name="mayoreo_minimo" required inputMode="numeric" defaultValue={n.mayoreo_minimo ?? ""} className={campo} />
-              </label>
-            </div>
+            <label className="block">
+              <span className="text-sm font-semibold">Años en el negocio *</span>
+              <input name="anios" required inputMode="numeric" defaultValue={n.anios || ""} className={campo} />
+            </label>
+            <CampoMayoreo minimo={n.mayoreo_minimo} unidad={n.mayoreo_unidad} requerido />
             <CamposWhatsapp valores={n.whatsapps} />
             <CamposVenta presencial={n.vende_presencial} enLinea={n.vende_en_linea} otros={n.otros_medios} />
             <label className="block sm:col-span-2">

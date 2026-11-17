@@ -48,3 +48,20 @@ export function mostrarWhatsapp(n: string) {
   const d = n.replace(/^52(1)?/, "");
   return d.length === 10 ? `${d.slice(0, 3)} ${d.slice(3, 6)} ${d.slice(6)}` : n;
 }
+
+// Unidad del mínimo de mayoreo. «Otra» deja escribir la del proveedor (p. ej. «camisas», «rollos»).
+export const UNIDADES_MAYOREO = [
+  { valor: "piezas", nombre: "Piezas", singular: "pieza" },
+  { valor: "paquetes", nombre: "Paquetes", singular: "paquete" },
+  { valor: "docenas", nombre: "Docenas", singular: "docena" },
+  { valor: "cajas", nombre: "Cajas", singular: "caja" },
+  { valor: "pares", nombre: "Pares", singular: "par" },
+  { valor: "juegos", nombre: "Juegos", singular: "juego" },
+];
+
+// «12 paquetes», «1 docena», «20 camisas».
+export function textoMayoreo(cantidad: number, unidad: string | null | undefined) {
+  const u = (unidad || "piezas").trim();
+  const conocida = UNIDADES_MAYOREO.find((x) => x.valor === u.toLowerCase());
+  return `${cantidad} ${cantidad === 1 && conocida ? conocida.singular : u}`;
+}

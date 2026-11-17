@@ -26,6 +26,7 @@ type FilaProveedor = {
   whatsapps: string[] | null;
   anios: number;
   mayoreo_minimo: number;
+  mayoreo_unidad: string | null;
   descripcion: string | null;
   estado_sello: Proveedor["estadoSello"];
   evaluado_en: string | null;
@@ -52,7 +53,7 @@ type FilaProveedor = {
 };
 
 const COLUMNAS = [
-  "slug,nombre,especialidad_id,estado_republica,vende_presencial,vende_en_linea,otros_medios,maps_url,whatsapps,anios,mayoreo_minimo,descripcion,estado_sello,evaluado_en",
+  "slug,nombre,especialidad_id,estado_republica,vende_presencial,vende_en_linea,otros_medios,maps_url,whatsapps,anios,mayoreo_minimo,mayoreo_unidad,descripcion,estado_sello,evaluado_en",
   "proxima_revision,whatsapp_oficial,banco,clabe_terminacion,dias_tianguis,envios,compromiso_devolucion,foto_portada_url,demo",
   "proveedor_categorias(categoria_id)",
   "catalogo_items(nombre,descripcion,precio_mayoreo,foto_url,orden,categoria_id,publicos)",
@@ -75,6 +76,7 @@ function aProveedor(f: FilaProveedor): Proveedor {
     whatsapps: f.whatsapps ?? (f.whatsapp_oficial ? [f.whatsapp_oficial] : []),
     anios: f.anios,
     mayoreoMinimo: f.mayoreo_minimo,
+    mayoreoUnidad: f.mayoreo_unidad ?? "piezas",
     descripcion: f.descripcion ?? "",
     estadoSello: f.estado_sello,
     evaluadoEn: f.evaluado_en,

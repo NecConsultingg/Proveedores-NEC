@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Resultado } from "@/lib/filtros";
 import { nombrePublico } from "@/lib/tipos";
-import { formatoVenta } from "@/lib/venta";
+import { formatoVenta, textoMayoreo } from "@/lib/venta";
 import { InsigniaSello } from "./insignia-sello";
 
 export function TarjetaProveedor({ r }: { r: Resultado }) {
@@ -33,7 +33,7 @@ export function TarjetaProveedor({ r }: { r: Resultado }) {
         )}
         <div className="flex flex-wrap gap-2 text-sm">
           <span className="rounded border border-black/10 bg-humo px-2">{p.anios} años</span>
-          <span className="rounded border border-black/10 bg-humo px-2">Mayoreo desde {p.mayoreoMinimo} pzas</span>
+          <span className="rounded border border-black/10 bg-humo px-2">Mayoreo desde {textoMayoreo(p.mayoreoMinimo, p.mayoreoUnidad)}</span>
         </div>
         <Link
           href={`/proveedores/${p.slug}`}

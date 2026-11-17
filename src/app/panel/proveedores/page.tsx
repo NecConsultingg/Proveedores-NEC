@@ -17,6 +17,7 @@ export type ProveedorPanel = {
   whatsapps: string[] | null;
   anios: number;
   mayoreo_minimo: number;
+  mayoreo_unidad: string;
   descripcion: string | null;
   estado_sello: string;
   evaluado_en: string | null;

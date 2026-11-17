@@ -61,6 +61,7 @@ export interface Proveedor {
   mapsUrl: string | null; // enlace de Google Maps que puso el proveedor
   anios: number;
   mayoreoMinimo: number;
+  mayoreoUnidad: string; // piezas, paquetes, docenas… o la que escriba el proveedor
   descripcion: string;
   estadoSello: EstadoSello;
   evaluadoEn: string | null; // ISO date

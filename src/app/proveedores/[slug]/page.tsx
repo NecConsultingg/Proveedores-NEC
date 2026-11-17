@@ -10,7 +10,7 @@ import { CALENDARIO, FUNCIONES } from "@/lib/config";
 import { obtenerProveedor } from "@/lib/datos";
 import { publicosDe } from "@/lib/filtros";
 import { nombrePublico, type Proveedor } from "@/lib/tipos";
-import { formatoVenta, mostrarWhatsapp } from "@/lib/venta";
+import { formatoVenta, mostrarWhatsapp, textoMayoreo } from "@/lib/venta";
 
 export async function generateMetadata({ params }: PageProps<"/proveedores/[slug]">): Promise<Metadata> {
   const { directorio, proveedor: p } = await obtenerProveedor((await params).slug);
@@ -210,7 +210,7 @@ async function PerfilProveedor({ params }: Pick<PageProps<"/proveedores/[slug]">
               <Campo nombre="Formato de venta">{formatoVenta(p).join(" · ") || "—"}</Campo>
               {p.diasTianguis && <Campo nombre="Días de tianguis">{p.diasTianguis}</Campo>}
               {FUNCIONES.envios && <Campo nombre="Envíos">{p.envios || "—"}</Campo>}
-              <Campo nombre="Mayoreo">Desde {p.mayoreoMinimo} piezas</Campo>
+              <Campo nombre="Mayoreo">Desde {textoMayoreo(p.mayoreoMinimo, p.mayoreoUnidad)}</Campo>
             </dl>
             {p.mapsUrl && (
               <a

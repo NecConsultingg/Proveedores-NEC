@@ -8,7 +8,7 @@ import { leerWhatsapps } from "@/lib/formulario-whatsapp";
 
 // Campos que el proveedor puede proponer (la base de datos revisa lo mismo).
 const CAMPOS = [
-  "estado_republica", "vende_presencial", "vende_en_linea", "otros_medios", "maps_url", "anios", "mayoreo_minimo", "descripcion", "clabe_oficial", "banco",
+  "estado_republica", "vende_presencial", "vende_en_linea", "otros_medios", "maps_url", "anios", "mayoreo_minimo", "mayoreo_unidad", "descripcion", "clabe_oficial", "banco",
   "dias_tianguis", "envios", "compromiso_devolucion",
 ];
 const NUMEROS = new Set(["anios", "mayoreo_minimo"]);
@@ -73,7 +73,9 @@ export async function registrarNegocio(_prev: EstadoAccion, fd: FormData): Promi
   if (texto("anios") === "" || !Number.isInteger(anios) || anios < 0 || anios > 80)
     return { ok: false, mensaje: "Escribe los años en el negocio en números." };
   if (texto("mayoreo_minimo") === "" || !Number.isInteger(mayoreo) || mayoreo < 1)
-    return { ok: false, mensaje: "Escribe desde cuántas piezas vendes al mayoreo." };
+    return { ok: false, mensaje: "Escribe desde cuánto vendes al mayoreo (la cantidad)." };
+  const unidad = texto("mayoreo_unidad") || "piezas";
+  if (unidad.length < 2 || unidad.length > 30) return { ok: false, mensaje: "Escribe la unidad del mayoreo (ej. piezas, paquetes)." };
   if (fd.get("acepta") !== "on") return { ok: false, mensaje: "Marca la casilla de autorización para enviar tu registro." };
 
   const datos: Record<string, unknown> = {
@@ -84,6 +86,7 @@ export async function registrarNegocio(_prev: EstadoAccion, fd: FormData): Promi
     otros_medios: texto("otros_medios") || null,
     anios,
     mayoreo_minimo: mayoreo,
+    mayoreo_unidad: unidad,
     dias_tianguis: texto("dias_tianguis") || null,
     descripcion: texto("descripcion") || null,
     maps_url: texto("maps_url") || null,

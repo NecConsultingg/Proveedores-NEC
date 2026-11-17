@@ -21,6 +21,7 @@ export interface MiNegocio {
   maps_url: string | null;
   anios: number | null;
   mayoreo_minimo: number | null;
+  mayoreo_unidad: string | null;
   descripcion: string | null;
   whatsapp_oficial: string | null;
   clabe_oficial: string | null;

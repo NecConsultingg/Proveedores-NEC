@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { FormaAccion } from "@/app/panel/forma-accion";
 import { CampoMaps } from "@/components/campo-maps";
+import { CampoMayoreo } from "@/components/campo-mayoreo";
 import { CamposVenta } from "@/components/campos-venta";
 import { CamposWhatsapp } from "@/components/campos-whatsapp";
 import { FUNCIONES } from "@/lib/config";
@@ -72,7 +73,7 @@ export default async function MiNegocioInicio({ searchParams }: PageProps<"/mi-n
             {FUNCIONES.clabe && <Campo n={n} k="banco" etiqueta="Banco" />}
             {FUNCIONES.clabe && <Campo n={n} k="clabe_oficial" etiqueta="CLABE oficial (18 dígitos)" inputMode="numeric" />}
             <Campo n={n} k="anios" etiqueta="Años en el negocio" inputMode="numeric" />
-            <Campo n={n} k="mayoreo_minimo" etiqueta="Mayoreo desde (piezas)" inputMode="numeric" />
+            <CampoMayoreo minimo={n.mayoreo_minimo} unidad={n.mayoreo_unidad} conOriginales />
             <Campo n={n} k="dias_tianguis" etiqueta="Días de tianguis" />
             {FUNCIONES.envios && <Campo n={n} k="envios" etiqueta="Envíos" />}
             <CamposVenta presencial={n.vende_presencial} enLinea={n.vende_en_linea} otros={n.otros_medios} conOriginales />
