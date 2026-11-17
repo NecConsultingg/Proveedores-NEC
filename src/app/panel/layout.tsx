@@ -4,6 +4,9 @@ import { Suspense } from "react";
 import { salir } from "@/app/acceso/acciones";
 import { NOMBRE_NIVEL, obtenerMiembro, rango, rpc, type Nivel } from "@/lib/panel";
 
+// El panel depende de la sesión: siempre se arma en el momento, nunca se prerenderiza.
+export const instant = false;
+
 export const metadata: Metadata = {
   title: { default: "Panel NEC", template: "%s · Panel NEC" },
   robots: { index: false, follow: false },

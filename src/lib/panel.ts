@@ -1,5 +1,6 @@
 import "server-only";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { supabaseConSesion } from "./supabase/servidor";
 
 export type Nivel = "staff" | "admin_medio" | "superadmin";
@@ -28,6 +29,7 @@ export async function rpc<T>(nombre: string, args?: Record<string, unknown>): Pr
 
 // Devuelve al miembro del equipo con sesión activa, o lo manda a /acceso.
 export async function obtenerMiembro(): Promise<Miembro> {
+  await connection(); // depende de la sesión: siempre en el momento, nunca prerenderizado
   const miembro = await rpc<Miembro | null>("panel_yo").catch(() => null);
   if (!miembro) redirect("/acceso?error=sin-acceso");
   return miembro;
