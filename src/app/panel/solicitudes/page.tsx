@@ -1,3 +1,4 @@
+import { formatoVenta } from "@/lib/venta";
 import { fecha, obtenerMiembro, rango, rpc } from "@/lib/panel";
 import { cambiarEstadoSolicitud } from "../acciones";
 import { FormaAccion } from "../forma-accion";
@@ -9,8 +10,12 @@ type Solicitud = {
   whatsapp: string;
   correo: string | null;
   especialidad_slug: string;
-  tipo_ubicacion: string;
-  municipio: string;
+  tipo_ubicacion: string | null;
+  municipio: string | null;
+  estado_republica: string | null;
+  vende_presencial: boolean;
+  vende_en_linea: boolean;
+  otros_medios: string | null;
   anios: number;
   redes: string | null;
   cliente_nec: boolean;
@@ -54,7 +59,10 @@ export default async function Solicitudes() {
               {s.correo && <> · {s.correo}</>}
             </p>
             <p className="text-sm text-pizarra">
-              Especialidad: {s.especialidad_slug} · {s.tipo_ubicacion.replaceAll("_", " ")} · {s.municipio} · {s.anios} años
+              Especialidad: {s.especialidad_slug} ·{" "}
+              {[s.estado_republica ?? s.municipio,
+                formatoVenta({ vendePresencial: s.vende_presencial, vendeEnLinea: s.vende_en_linea, otrosMedios: s.otros_medios }).join(", ") || s.tipo_ubicacion?.replaceAll("_", " "),
+                `${s.anios} años`].filter(Boolean).join(" · ")}
               {s.cliente_nec && " · Cliente de NEC"}
             </p>
             {s.redes && <p className="text-sm text-pizarra">Redes: {s.redes}</p>}

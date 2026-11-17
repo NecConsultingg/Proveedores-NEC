@@ -61,6 +61,11 @@ export const CAMPOS: Record<string, string> = {
   estado_sello: "Sello",
   evaluado_en: "Evaluado el",
   proxima_revision: "Próxima revisión",
+  estado_republica: "Estado",
+  vende_presencial: "Vende presencial",
+  vende_en_linea: "Vende en línea",
+  otros_medios: "Otros medios de venta",
+  maps_url: "Ubicación en Google Maps",
 };
 
 export const TIPO_CAMBIO: Record<string, string> = {

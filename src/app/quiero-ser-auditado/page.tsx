@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CALENDARIO } from "@/lib/config";
+import { CALENDARIO, FUNCIONES } from "@/lib/config";
 import { obtenerDirectorio } from "@/lib/datos";
 import { Formulario } from "./formulario";
 
@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Quiero ser auditado" };
 const PASOS = [
   ["Solicitud", `Llena el formulario antes del ${CALENDARIO.cierreConvocatoria}.`],
   ["Preselección", "A finales de enero asignamos los lugares por especialidad y firmamos el contrato."],
-  ["Auditoría", `En ${CALENDARIO.temporadaAuditorias}: pedidos comprobados, visita y compromiso de devolución.`],
+  ["Auditoría", `En ${CALENDARIO.temporadaAuditorias}: pedidos comprobados${FUNCIONES.compromisoDevolucion ? ", visita y compromiso de devolución" : " y visita a instalaciones"}.`],
   ["Publicación", `Los proveedores verificados se publican en la ${CALENDARIO.publicacion}.`],
 ];
 
@@ -21,7 +21,7 @@ export default async function QuieroSerAuditado() {
           <p className="etiqueta text-acero">Temporada de evaluación 2027</p>
           <h1 className="titulo mt-3 text-3xl sm:text-4xl">Quiero ser auditado</h1>
           <p className="mt-3 max-w-2xl text-humo/90">
-            Hay pocos lugares por especialidad y cada proveedor ocupa uno solo, aunque venda para dama, caballero y niño. Si vendes ropa al mayoreo en Texmelucan o la región, aparta tu
+            Hay pocos lugares por especialidad y cada proveedor ocupa uno solo, aunque venda para dama, caballero y niño. Si vendes ropa o calzado al mayoreo en Texmelucan o la región, aparta tu
             lugar para la evaluación de febrero.
           </p>
         </div>

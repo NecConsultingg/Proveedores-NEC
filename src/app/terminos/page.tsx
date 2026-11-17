@@ -9,7 +9,7 @@ export default function Terminos() {
     <PaginaLegal titulo="Términos y condiciones">
       <h2>Qué es este directorio</h2>
       <p>
-        Un listado de proveedores de ropa al mayoreo elaborado por NEC. Durante el piloto (diciembre 2026 a marzo 2027) los
+        Un listado de proveedores de ropa y calzado al mayoreo elaborado por NEC. Durante el piloto (diciembre 2026 a marzo 2027) los
         proveedores listados son clientes actuales de NEC y todavía no han pasado por la evaluación oficial.
       </p>
       <h2>Qué no es</h2>

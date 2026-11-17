@@ -2,14 +2,14 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { AvisoDemo } from "@/components/aviso-demo";
 import { TarjetaProveedor } from "@/components/tarjeta-proveedor";
-import { CALENDARIO, LEYENDA_PILOTO } from "@/lib/config";
+import { CALENDARIO, FUNCIONES, LEYENDA_PILOTO } from "@/lib/config";
 import { obtenerDirectorio } from "@/lib/datos";
 import { filtrar } from "@/lib/filtros";
 import { PUBLICOS, type Publico } from "@/lib/tipos";
 
 const PILARES = [
   { titulo: "Clientes de NEC", texto: "Negocios con los que ya trabajamos y conocemos de primera mano." },
-  { titulo: "Contacto oficial", texto: "Solo publicamos el WhatsApp y la cuenta que el dueño nos confirmó." },
+  { titulo: "Contacto oficial", texto: `Solo publicamos el WhatsApp${FUNCIONES.clabe ? " y la cuenta" : ""} que el dueño nos confirmó.` },
   { titulo: "Evaluación en febrero", texto: "En la temporada 2027 revisaremos pedidos, pagos e instalaciones." },
   { titulo: "Lugares limitados", texto: "Pocos especialistas por categoría, para que el directorio tenga filtro." },
 ];
@@ -52,6 +52,9 @@ async function Directorio({ searchParams }: Pick<PageProps<"/">, "searchParams">
   const grupos = d.categorias.filter((c) => c.nivel === 2);
   const subcategorias = grupoActivo ? d.subcategorias.filter((s) => s.parentId === grupoActivo.id) : [];
   const resultados = filtrar(d, f);
+  // Solo los públicos que algún proveedor maneja (sin chips vacíos como «Bebé» si nadie vende para bebé).
+  const conPublico = new Set(d.proveedores.flatMap((p) => p.catalogo.flatMap((c) => c.publicos)));
+  const publicos = PUBLICOS.filter((p) => conPublico.has(p.valor) || p.valor === publico);
 
   return (
     <section id="directorio" className="mx-auto max-w-6xl scroll-mt-4 px-5 py-12">
@@ -71,7 +74,8 @@ async function Directorio({ searchParams }: Pick<PageProps<"/">, "searchParams">
           ))}
         </FilaFiltros>
 
-        {subcategorias.length > 0 && (
+        {/* Si la categoría tiene una sola subcategoría (p. ej. Blusas), la fila «Tipo» solo repetiría el nombre. */}
+        {subcategorias.length > 1 && (
           <FilaFiltros titulo="Tipo">
             <Chip href={enlace({ ...f, cat: grupoActivo!.slug })} activo={elegida?.nivel === 2}>
               Todo {grupoActivo!.nombre.toLowerCase()}
@@ -80,21 +84,23 @@ async function Directorio({ searchParams }: Pick<PageProps<"/">, "searchParams">
               <Chip key={s.slug} href={enlace({ ...f, cat: s.slug })} activo={elegida?.id === s.id}>
                 {s.nombre}{" "}
                 <span className="opacity-70">
-                  · {s.ocupados} de {s.cupo} lugares
+                  · {s.ocupados} de {s.cupo} {s.cupo === 1 ? "lugar" : "lugares"}
                 </span>
               </Chip>
             ))}
           </FilaFiltros>
         )}
 
+        {publicos.length > 0 && (
         <FilaFiltros titulo="Para">
           <Chip href={enlace({ ...f, publico: undefined })} activo={!publico}>Todos</Chip>
-          {PUBLICOS.map((p) => (
+          {publicos.map((p) => (
             <Chip key={p.valor} href={enlace({ ...f, publico: p.valor })} activo={publico === p.valor}>
               {p.nombre}
             </Chip>
           ))}
         </FilaFiltros>
+        )}
       </div>
 
       <p className="mt-6 text-sm text-pizarra" aria-live="polite">
@@ -160,16 +166,16 @@ function Portada() {
           <p className="etiqueta text-acero">Directorio de proveedores · Texmelucan y región</p>
           <h1 className="titulo mt-4 max-w-xl text-4xl leading-tight sm:text-5xl">Proveedores que sí cumplen.</h1>
           <p className="mt-5 max-w-xl text-lg text-humo/90">
-            Empezamos con los proveedores de ropa al mayoreo con los que NEC ya trabaja. En febrero de 2027 arranca la
-            primera temporada oficial de evaluación: pedidos comprobados, visita a instalaciones y compromiso de
-            devolución por escrito.
+            Empezamos con los proveedores de ropa y calzado al mayoreo con los que NEC ya trabaja. En febrero de 2027 arranca la
+            primera temporada oficial de evaluación: pedidos comprobados
+            {FUNCIONES.compromisoDevolucion ? ", visita a instalaciones y compromiso de devolución por escrito." : " y visita a instalaciones."}
           </p>
           <form action="/#directorio" className="mt-8 flex max-w-xl flex-col gap-3 sm:flex-row">
             <label htmlFor="q" className="sr-only">Buscar proveedor o producto</label>
             <input
               id="q"
               name="q"
-              placeholder="Busca por producto, ej. jeans, faldas, fajas"
+              placeholder="Busca por producto, ej. jeans, blusas, tenis"
               className="flex-1 rounded bg-humo px-4 py-3 text-marino placeholder:text-pizarra/70"
             />
             <button className="etiqueta rounded bg-acero px-6 py-3 text-marino hover:bg-arena">Buscar</button>

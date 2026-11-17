@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Directorio de proveedores NEC",
     short_name: "Directorio NEC",
-    description: "Proveedores de ropa al mayoreo de Texmelucan con los que NEC ya trabaja.",
+    description: "Proveedores de ropa y calzado al mayoreo de Texmelucan con los que NEC ya trabaja.",
     lang: "es-MX",
     start_url: "/",
     display: "standalone",

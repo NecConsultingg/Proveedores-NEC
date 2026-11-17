@@ -5,6 +5,14 @@ export const CALENDARIO = {
   publicacion: "primera semana de abril de 2027",
 };
 
+// Opciones apagadas por ahora (16-nov-2026): se encienden cuando la etapa lo pida. Los datos guardados no se borran.
+export const FUNCIONES = {
+  clabe: false, // CLABE oficial y banco: perfil público, verificador, panel y «Mi negocio»
+  compromisoDevolucion: false, // compromiso de devolución: perfil, criterios y formularios
+  envios: false, // «Envíos»: estar en el directorio ya implica que envía
+  notasInternas: false, // cuadro de notas internas en la ficha del panel
+};
+
 export const LEYENDA_PILOTO =
   "Proveedores aliados NEC · evaluación oficial en febrero 2027";
 

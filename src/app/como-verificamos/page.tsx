@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CALENDARIO } from "@/lib/config";
+import { CALENDARIO, FUNCIONES } from "@/lib/config";
 
 export const metadata: Metadata = { title: "Cómo verificamos" };
 
@@ -11,8 +11,8 @@ const CRITERIOS = [
   ["Confirmaciones de compradores", "Solo opinan compradores con un pedido comprobado."],
   ["Antigüedad comprobable", "Años en el mismo punto de venta y antigüedad de sus redes sociales."],
   ["Identidad del dueño", "Quien dice ser el dueño lo tiene que demostrar."],
-  ["Compromiso de devolución", "Condiciones por escrito, firmadas por el proveedor ante NEC."],
-  ["Contacto oficial", "Solo publicamos el WhatsApp y la cuenta de pago que NEC confirmó con el dueño."],
+  ...(FUNCIONES.compromisoDevolucion ? [["Compromiso de devolución", "Condiciones por escrito, firmadas por el proveedor ante NEC."]] : []),
+  ["Contacto oficial", `Solo publicamos el WhatsApp${FUNCIONES.clabe ? " y la cuenta de pago" : ""} que NEC confirmó con el dueño.`],
 ];
 
 const RETIRO = [
@@ -24,7 +24,7 @@ const RETIRO = [
 
 const SUSPENSION = [
   "Varias quejas comprobadas en poco tiempo (por ejemplo, 3 en 6 meses).",
-  "No cumplir su compromiso de devolución.",
+  ...(FUNCIONES.compromisoDevolucion ? ["No cumplir su compromiso de devolución."] : []),
   "No renovar la evaluación a tiempo.",
   "No responder a una mediación.",
 ];
@@ -68,7 +68,7 @@ export default function ComoVerificamos() {
             ))}
           </ul>
           <p className="mt-4 text-sm text-pizarra">
-            Lugares limitados por especialidad (por ejemplo, 8 en jeans y 5 en lencería). Cada proveedor ocupa un solo lugar, en su especialidad, aunque venda para dama, caballero y niño. Ser cliente de NEC da prioridad para la
+            Lugares limitados por especialidad (por ejemplo, 3 en jeans y 2 en pantalón de vestir). Cada proveedor ocupa un solo lugar, en su especialidad, aunque venda para dama, caballero y niño. Ser cliente de NEC da prioridad para la
             evaluación, nunca el sello automático.
           </p>
         </section>

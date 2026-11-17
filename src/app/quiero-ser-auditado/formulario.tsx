@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
+import { CamposVenta } from "@/components/campos-venta";
 import type { Subcategoria } from "@/lib/tipos";
+import { ESTADOS } from "@/lib/venta";
 import { enviarSolicitud, type EstadoFormulario } from "./acciones";
 
 const inicial: EstadoFormulario = { ok: false, mensaje: "", errores: {}, valores: {}, intento: 0 };
@@ -65,20 +67,19 @@ export function Formulario({ subcategorias }: { subcategorias: Subcategoria[] })
             Ocupas un solo lugar, en tu especialidad. Lo demás que vendas lo registramos como categorías secundarias.
           </span>
         </Campo>
-        <Campo etiqueta="¿Dónde vendes?" error={e.tipoUbicacion}>
-          <select name="tipoUbicacion" required defaultValue={v.tipoUbicacion ?? ""} className={campo}>
-            <option value="" disabled>Elige una</option>
-            <option value="fabrica">Fábrica o taller</option>
-            <option value="puesto">Puesto en tianguis</option>
-            <option value="fabrica_y_puesto">Fábrica y puesto</option>
+        <Campo etiqueta="Estado" error={e.estado}>
+          <select name="estado_republica" required defaultValue={v.estado_republica ?? "Puebla"} className={campo}>
+            <option value="" disabled>Elige tu estado</option>
+            {ESTADOS.map((x) => <option key={x} value={x}>{x}</option>)}
           </select>
-        </Campo>
-        <Campo etiqueta="Municipio" error={e.municipio}>
-          <input name="municipio" required defaultValue={v.municipio ?? "San Martín Texmelucan"} className={campo} />
         </Campo>
         <Campo etiqueta="Años en el negocio" error={e.anios}>
           <input name="anios" defaultValue={v.anios} required inputMode="numeric" className={campo} />
         </Campo>
+      </div>
+      <div>
+        <CamposVenta presencial={v.vende_presencial === "on"} enLinea={v.vende_en_linea === "on"} otros={v.otros_medios} />
+        {e.formatoVenta && <p className="mt-1 text-sm text-red-700">{e.formatoVenta}</p>}
       </div>
       <Campo etiqueta="Redes sociales o catálogo (Facebook, Instagram, TikTok…)">
         <input name="redes" defaultValue={v.redes} className={campo} />

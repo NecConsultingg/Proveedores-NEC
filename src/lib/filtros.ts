@@ -55,7 +55,7 @@ export function filtrar(
     if (palabras.length) {
       const nombresCat = suyas.map((id) => porId.get(id)?.nombre ?? "").join(" ");
       const modelos = p.catalogo.map((c) => `${c.nombre} ${c.descripcion}`).join(" ");
-      const texto = normalizar(`${p.nombre} ${p.municipio} ${p.descripcion} ${nombresCat} ${modelos}`);
+      const texto = normalizar(`${p.nombre} ${p.estado ?? ""} ${p.otrosMedios ?? ""} ${p.descripcion} ${nombresCat} ${modelos}`);
       if (!palabras.every((w) => texto.includes(w))) continue;
     }
 

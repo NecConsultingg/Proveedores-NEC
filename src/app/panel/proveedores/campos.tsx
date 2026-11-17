@@ -1,3 +1,7 @@
+import { CampoMaps } from "@/components/campo-maps";
+import { CamposVenta } from "@/components/campos-venta";
+import { FUNCIONES } from "@/lib/config";
+import { ESTADOS } from "@/lib/venta";
 import type { ProveedorPanel } from "./page";
 
 export type Especialidad = { id: string; nombre: string; grupo: string; cupo: number; ocupados: number };
@@ -37,39 +41,40 @@ export function CamposProveedor({ p, especialidades }: { p?: ProveedorPanel; esp
         {orig("especialidad_id")}
       </label>
       <label className="block">
-        <span className="text-sm font-semibold">Dónde vende *</span>
-        <select name="tipo_ubicacion" required defaultValue={p?.tipo_ubicacion ?? ""} className={campo}>
-          <option value="" disabled>Elige una</option>
-          <option value="fabrica">Fábrica</option>
-          <option value="puesto">Puesto en tianguis</option>
-          <option value="fabrica_y_puesto">Fábrica y puesto</option>
+        <span className="text-sm font-semibold">Estado</span>
+        <select name="estado_republica" defaultValue={p ? (p.estado_republica ?? "") : "Puebla"} className={campo}>
+          <option value="">Elige un estado</option>
+          {ESTADOS.map((e) => <option key={e} value={e}>{e}</option>)}
         </select>
-        {orig("tipo_ubicacion")}
+        {orig("estado_republica")}
       </label>
-      {texto("municipio", "Municipio", { placeholder: "San Martín Texmelucan" })}
       {texto("anios", "Años en el negocio", { inputMode: "numeric" })}
       {texto("mayoreo_minimo", "Mayoreo desde (piezas)", { inputMode: "numeric" })}
       {texto("whatsapp_oficial", "WhatsApp oficial (10 dígitos)", { inputMode: "tel" })}
-      {texto("banco", "Banco")}
-      {texto("clabe_oficial", "CLABE oficial (18 dígitos)", { inputMode: "numeric" })}
+      {FUNCIONES.clabe && texto("banco", "Banco")}
+      {FUNCIONES.clabe && texto("clabe_oficial", "CLABE oficial (18 dígitos)", { inputMode: "numeric" })}
       {texto("dias_tianguis", "Días de tianguis")}
-      {texto("envios", "Envíos")}
+      {FUNCIONES.envios && texto("envios", "Envíos")}
       {texto("consentimiento_publicacion_en", "Fecha de autorización firmada", { type: "date" })}
+      <CamposVenta presencial={p?.vende_presencial} enLinea={p?.vende_en_linea} otros={p?.otros_medios} conOriginales={Boolean(p)} />
+      <CampoMaps valor={p?.maps_url} conOriginal={Boolean(p)} />
       <label className="block sm:col-span-2">
         <span className="text-sm font-semibold">Descripción</span>
         <textarea name="descripcion" rows={2} defaultValue={p?.descripcion ?? ""} className={campo} />
         {orig("descripcion")}
       </label>
-      <label className="block sm:col-span-2">
+      {FUNCIONES.compromisoDevolucion && <label className="block sm:col-span-2">
         <span className="text-sm font-semibold">Compromiso de devolución</span>
         <textarea name="compromiso_devolucion" rows={2} defaultValue={p?.compromiso_devolucion ?? ""} className={campo} />
         {orig("compromiso_devolucion")}
-      </label>
-      <label className="block sm:col-span-2">
-        <span className="text-sm font-semibold">Notas internas (nunca se publican)</span>
-        <textarea name="notas_internas" rows={2} defaultValue={p?.notas_internas ?? ""} className={campo} />
-        {orig("notas_internas")}
-      </label>
+      </label>}
+      {FUNCIONES.notasInternas && (
+        <label className="block sm:col-span-2">
+          <span className="text-sm font-semibold">Notas internas (nunca se publican)</span>
+          <textarea name="notas_internas" rows={2} defaultValue={p?.notas_internas ?? ""} className={campo} />
+          {orig("notas_internas")}
+        </label>
+      )}
       {p && (
         <label className="flex items-center gap-2 sm:col-span-2">
           <input type="checkbox" name="publicado" defaultChecked={p.publicado} />

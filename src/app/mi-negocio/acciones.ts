@@ -6,10 +6,11 @@ import type { EstadoAccion } from "@/app/panel/acciones";
 
 // Campos que el proveedor puede proponer (la base de datos revisa lo mismo).
 const CAMPOS = [
-  "municipio", "anios", "mayoreo_minimo", "descripcion", "whatsapp_oficial", "clabe_oficial", "banco",
+  "estado_republica", "vende_presencial", "vende_en_linea", "otros_medios", "maps_url", "anios", "mayoreo_minimo", "descripcion", "whatsapp_oficial", "clabe_oficial", "banco",
   "dias_tianguis", "envios", "compromiso_devolucion",
 ];
 const NUMEROS = new Set(["anios", "mayoreo_minimo"]);
+const BOOLEANOS = new Set(["vende_presencial", "vende_en_linea"]);
 
 function normalizar(campo: string, crudo: string): unknown {
   if (crudo === "") return null;
@@ -26,6 +27,13 @@ function normalizar(campo: string, crudo: string): unknown {
 export async function proponerDesdeProveedor(_prev: EstadoAccion, fd: FormData): Promise<EstadoAccion> {
   const datos: Record<string, unknown> = {};
   for (const campo of CAMPOS) {
+    if (BOOLEANOS.has(campo)) {
+      // Casilla: si no viene marcada no llega en el formulario; se compara con el valor guardado.
+      if (!fd.has(`original_${campo}`)) continue;
+      const marcado = fd.get(campo) === "on";
+      if (marcado !== (fd.get(`original_${campo}`) === "true")) datos[campo] = marcado;
+      continue;
+    }
     if (!fd.has(campo)) continue;
     const nuevo = normalizar(campo, String(fd.get(campo) ?? "").trim());
     const original = normalizar(campo, String(fd.get(`original_${campo}`) ?? "").trim());

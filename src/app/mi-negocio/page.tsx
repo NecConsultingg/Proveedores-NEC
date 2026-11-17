@@ -1,6 +1,10 @@
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { FormaAccion } from "@/app/panel/forma-accion";
+import { CampoMaps } from "@/components/campo-maps";
+import { CamposVenta } from "@/components/campos-venta";
+import { FUNCIONES } from "@/lib/config";
+import { ESTADOS } from "@/lib/venta";
 import { CAMPOS, ESTADO_CAMBIO, fecha, valorLegible } from "@/lib/panel";
 import { NOMBRE_SELLO, obtenerNegocio, type MiNegocio } from "@/lib/mi-negocio";
 import { proponerDesdeProveedor } from "./acciones";
@@ -33,7 +37,7 @@ export default async function MiNegocioInicio({ searchParams }: PageProps<"/mi-n
       <section className="rounded-md border border-black/5 bg-white p-6">
         <h2 className="titulo text-xl">Mis datos</h2>
         <p className="mt-1 text-sm text-pizarra">
-          Cambia lo que necesites y envíalo. El equipo NEC lo revisa antes de publicarlo; si cambias tu WhatsApp o tu CLABE,
+          Cambia lo que necesites y envíalo. El equipo NEC lo revisa antes de publicarlo; si cambias tu WhatsApp{FUNCIONES.clabe ? " o tu CLABE" : ""},
           te llamaremos al número anterior para confirmar que eres tú. Nombre, especialidad y fotos: escríbenos.
         </p>
         <p className="mt-3 text-sm">
@@ -42,15 +46,24 @@ export default async function MiNegocioInicio({ searchParams }: PageProps<"/mi-n
         <FormaAccion accion={proponerDesdeProveedor} boton="Enviar cambios a revisión" className="mt-4 space-y-5">
           <div className="grid gap-4 sm:grid-cols-2">
             <Campo n={n} k="whatsapp_oficial" etiqueta="WhatsApp oficial (10 dígitos)" valor={whatsapp} inputMode="tel" />
-            <Campo n={n} k="municipio" etiqueta="Municipio" />
-            <Campo n={n} k="banco" etiqueta="Banco" />
-            <Campo n={n} k="clabe_oficial" etiqueta="CLABE oficial (18 dígitos)" inputMode="numeric" />
+            <label className="block">
+              <span className="text-sm font-semibold">Estado</span>
+              <select name="estado_republica" defaultValue={n.estado_republica ?? ""} className={campo}>
+                <option value="">Elige tu estado</option>
+                {ESTADOS.map((e) => <option key={e} value={e}>{e}</option>)}
+              </select>
+              <input type="hidden" name="original_estado_republica" value={n.estado_republica ?? ""} />
+            </label>
+            {FUNCIONES.clabe && <Campo n={n} k="banco" etiqueta="Banco" />}
+            {FUNCIONES.clabe && <Campo n={n} k="clabe_oficial" etiqueta="CLABE oficial (18 dígitos)" inputMode="numeric" />}
             <Campo n={n} k="anios" etiqueta="Años en el negocio" inputMode="numeric" />
             <Campo n={n} k="mayoreo_minimo" etiqueta="Mayoreo desde (piezas)" inputMode="numeric" />
             <Campo n={n} k="dias_tianguis" etiqueta="Días de tianguis" />
-            <Campo n={n} k="envios" etiqueta="Envíos" />
+            {FUNCIONES.envios && <Campo n={n} k="envios" etiqueta="Envíos" />}
+            <CamposVenta presencial={n.vende_presencial} enLinea={n.vende_en_linea} otros={n.otros_medios} conOriginales />
+            <CampoMaps valor={n.maps_url} conOriginal />
             <Campo n={n} k="descripcion" etiqueta="Descripción" largo />
-            <Campo n={n} k="compromiso_devolucion" etiqueta="Compromiso de devolución" largo />
+            {FUNCIONES.compromisoDevolucion && <Campo n={n} k="compromiso_devolucion" etiqueta="Compromiso de devolución" largo />}
           </div>
           <label className="block">
             <span className="text-sm font-semibold">¿Por qué cambia? *</span>

@@ -7,8 +7,13 @@ export type ProveedorPanel = {
   nombre: string;
   especialidad: string | null;
   especialidad_id: string;
-  municipio: string;
-  tipo_ubicacion: string;
+  municipio: string | null;
+  tipo_ubicacion: string | null;
+  estado_republica: string | null;
+  vende_presencial: boolean;
+  vende_en_linea: boolean;
+  otros_medios: string | null;
+  maps_url: string | null;
   anios: number;
   mayoreo_minimo: number;
   descripcion: string | null;

@@ -14,7 +14,7 @@ export default function AvisoPrivacidad() {
       <h2>Qué datos recabamos</h2>
       <p>
         En el formulario «Quiero ser auditado»: nombre del negocio y del responsable, número de WhatsApp, correo
-        electrónico (opcional), municipio, especialidad, antigüedad y redes sociales. En «Verificar número o cuenta» no
+        electrónico (opcional), estado, formato de venta, especialidad, antigüedad y redes sociales. En «Verificar número o cuenta» no
         guardamos el número ni la cuenta que escribes.
       </p>
       <h2>Para qué los usamos</h2>

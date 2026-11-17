@@ -54,8 +54,11 @@ export interface Proveedor {
   nombre: string;
   especialidadId: string;
   secundariasIds: string[];
-  municipio: string;
-  tipoUbicacion: TipoUbicacion;
+  estado: string | null; // estado de la República
+  vendePresencial: boolean;
+  vendeEnLinea: boolean;
+  otrosMedios: string | null;
+  mapsUrl: string | null; // enlace de Google Maps que puso el proveedor
   anios: number;
   mayoreoMinimo: number;
   descripcion: string;
@@ -86,8 +89,10 @@ export interface SolicitudAuditoria {
   whatsapp: string;
   correo: string;
   especialidadSlug: string;
-  tipoUbicacion: TipoUbicacion;
-  municipio: string;
+  vendePresencial: boolean;
+  vendeEnLinea: boolean;
+  otrosMedios: string;
+  estado: string;
   anios: number;
   redes: string;
   clienteNec: boolean;

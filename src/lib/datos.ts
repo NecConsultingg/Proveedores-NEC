@@ -18,8 +18,11 @@ type FilaProveedor = {
   slug: string;
   nombre: string;
   especialidad_id: string;
-  municipio: string;
-  tipo_ubicacion: Proveedor["tipoUbicacion"];
+  estado_republica: string | null;
+  vende_presencial: boolean;
+  vende_en_linea: boolean;
+  otros_medios: string | null;
+  maps_url: string | null;
   anios: number;
   mayoreo_minimo: number;
   descripcion: string | null;
@@ -48,7 +51,7 @@ type FilaProveedor = {
 };
 
 const COLUMNAS = [
-  "slug,nombre,especialidad_id,municipio,tipo_ubicacion,anios,mayoreo_minimo,descripcion,estado_sello,evaluado_en",
+  "slug,nombre,especialidad_id,estado_republica,vende_presencial,vende_en_linea,otros_medios,maps_url,anios,mayoreo_minimo,descripcion,estado_sello,evaluado_en",
   "proxima_revision,whatsapp_oficial,banco,clabe_terminacion,dias_tianguis,envios,compromiso_devolucion,foto_portada_url,demo",
   "proveedor_categorias(categoria_id)",
   "catalogo_items(nombre,descripcion,precio_mayoreo,foto_url,orden,categoria_id,publicos)",
@@ -63,8 +66,11 @@ function aProveedor(f: FilaProveedor): Proveedor {
     nombre: f.nombre,
     especialidadId: f.especialidad_id,
     secundariasIds: f.proveedor_categorias.map((s) => s.categoria_id),
-    municipio: f.municipio,
-    tipoUbicacion: f.tipo_ubicacion,
+    estado: f.estado_republica,
+    vendePresencial: f.vende_presencial,
+    vendeEnLinea: f.vende_en_linea,
+    otrosMedios: f.otros_medios,
+    mapsUrl: f.maps_url,
     anios: f.anios,
     mayoreoMinimo: f.mayoreo_minimo,
     descripcion: f.descripcion ?? "",
@@ -153,8 +159,10 @@ export async function guardarSolicitud(s: SolicitudAuditoria): Promise<void> {
     whatsapp: s.whatsapp,
     correo: s.correo || null,
     especialidad_slug: s.especialidadSlug,
-    tipo_ubicacion: s.tipoUbicacion,
-    municipio: s.municipio,
+    vende_presencial: s.vendePresencial,
+    vende_en_linea: s.vendeEnLinea,
+    otros_medios: s.otrosMedios || null,
+    estado_republica: s.estado,
     anios: s.anios,
     redes: s.redes || null,
     cliente_nec: s.clienteNec,

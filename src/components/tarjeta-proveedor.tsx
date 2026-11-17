@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Resultado } from "@/lib/filtros";
-import { ETIQUETA_UBICACION, nombrePublico } from "@/lib/tipos";
+import { nombrePublico } from "@/lib/tipos";
+import { formatoVenta } from "@/lib/venta";
 import { InsigniaSello } from "./insignia-sello";
 
 export function TarjetaProveedor({ r }: { r: Resultado }) {
@@ -25,7 +26,7 @@ export function TarjetaProveedor({ r }: { r: Resultado }) {
         </p>
         <h3 className="text-xl font-semibold leading-tight">{p.nombre}</h3>
         <p className="text-sm text-pizarra">
-          {p.municipio} · {ETIQUETA_UBICACION[p.tipoUbicacion]}
+          {[p.estado, formatoVenta({ ...p, otrosMedios: null }).join(" y ")].filter(Boolean).join(" · ")}
         </p>
         {r.publicos.length > 0 && (
           <p className="text-sm">Para: {r.publicos.map(nombrePublico).join(" · ")}</p>

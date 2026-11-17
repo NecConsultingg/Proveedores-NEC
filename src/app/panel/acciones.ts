@@ -14,11 +14,12 @@ function refrescar() {
 }
 
 const NUMEROS = new Set(["anios", "mayoreo_minimo"]);
-const BOOLEANOS = new Set(["publicado"]);
+const BOOLEANOS = new Set(["publicado", "vende_presencial", "vende_en_linea"]);
 const CAMPOS_FORMULARIO = [
   "nombre", "especialidad_id", "municipio", "tipo_ubicacion", "anios", "mayoreo_minimo", "descripcion",
   "whatsapp_oficial", "clabe_oficial", "banco", "dias_tianguis", "envios", "compromiso_devolucion",
   "foto_portada_url", "publicado", "consentimiento_publicacion_en", "notas_internas",
+  "vende_presencial", "vende_en_linea", "otros_medios", "estado_republica", "maps_url",
 ];
 
 function leerCampo(fd: FormData, campo: string): unknown {

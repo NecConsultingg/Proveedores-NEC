@@ -1,5 +1,6 @@
 "use client";
 
+import { FUNCIONES } from "@/lib/config";
 import Link from "next/link";
 import { useActionState } from "react";
 import { verificar, type EstadoVerificacion } from "./acciones";
@@ -12,14 +13,14 @@ export function FormularioVerificar() {
     <div className="space-y-5">
       <form action={accion} className="flex flex-col gap-3 rounded-md border border-black/5 bg-white p-6 sm:flex-row sm:items-end">
         <label className="flex-1">
-          <span className="font-semibold">WhatsApp o CLABE</span>
+          <span className="font-semibold">{FUNCIONES.clabe ? "WhatsApp o CLABE" : "Número de WhatsApp"}</span>
           <input
             name="valor"
             required
             inputMode="numeric"
             defaultValue={valorPrevio}
             key={valorPrevio}
-            placeholder="Ej. 248 123 4567 o los 18 dígitos de la CLABE"
+            placeholder={FUNCIONES.clabe ? "Ej. 248 123 4567 o los 18 dígitos de la CLABE" : "Ej. 248 123 4567"}
             className="mt-1 w-full rounded border border-acero px-3 py-2.5 focus:border-marino focus:outline-none"
           />
         </label>

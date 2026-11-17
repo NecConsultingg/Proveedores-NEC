@@ -6,10 +6,11 @@ import { Suspense } from "react";
 import { AvisoDemo } from "@/components/aviso-demo";
 import { InsigniaSello } from "@/components/insignia-sello";
 import { MapaUbicacion } from "@/components/mapa-ubicacion";
-import { CALENDARIO } from "@/lib/config";
+import { CALENDARIO, FUNCIONES } from "@/lib/config";
 import { obtenerProveedor } from "@/lib/datos";
 import { publicosDe } from "@/lib/filtros";
-import { ETIQUETA_UBICACION, nombrePublico, type Proveedor } from "@/lib/tipos";
+import { nombrePublico, type Proveedor } from "@/lib/tipos";
+import { formatoVenta } from "@/lib/venta";
 
 export async function generateMetadata({ params }: PageProps<"/proveedores/[slug]">): Promise<Metadata> {
   const { directorio, proveedor: p } = await obtenerProveedor((await params).slug);
@@ -56,7 +57,7 @@ async function PerfilProveedor({ params }: Pick<PageProps<"/proveedores/[slug]">
   const grupo = cat(especialidad?.parentId ?? null);
   const secundarias = p.secundariasIds.map(cat).filter((c) => c !== undefined);
   const publicos = publicosDe(p);
-  const contactoConfirmado = Boolean(p.whatsappOficial || p.clabeTerminacion);
+  const contactoConfirmado = Boolean(p.whatsappOficial || (FUNCIONES.clabe && p.clabeTerminacion));
 
   const whatsapp = p.whatsappOficial
     ? `https://wa.me/${p.whatsappOficial}?text=${encodeURIComponent(
@@ -71,11 +72,11 @@ async function PerfilProveedor({ params }: Pick<PageProps<"/proveedores/[slug]">
           <div>
             <Link href="/#directorio" className="etiqueta text-acero hover:text-humo">← Volver al directorio</Link>
             <p className="etiqueta mt-5 text-acero">
-              {grupo ? `${grupo.nombre} · ` : ""}Especialista en {especialidad?.nombre.toLowerCase()} · Mayoreo
+              {grupo && grupo.nombre !== especialidad?.nombre ? `${grupo.nombre} · ` : ""}Especialista en {especialidad?.nombre.toLowerCase()} · Mayoreo
             </p>
             <h1 className="titulo mt-2 text-3xl sm:text-4xl">{p.nombre}</h1>
             <p className="mt-2 text-humo/90">
-              {p.municipio}, Puebla · {ETIQUETA_UBICACION[p.tipoUbicacion]} · {p.anios} años
+              {[p.estado, formatoVenta({ ...p, otrosMedios: null }).join(" y "), `${p.anios} años`].filter(Boolean).join(" · ")}
             </p>
           </div>
           <div className="flex items-center gap-4 rounded bg-humo px-5 py-4 text-marino">
@@ -100,7 +101,7 @@ async function PerfilProveedor({ params }: Pick<PageProps<"/proveedores/[slug]">
               <ul className="mt-4 grid gap-4 sm:grid-cols-2">
                 <Dato titulo="Cliente actual de NEC">Trabajamos con este negocio y lo conocemos de primera mano.</Dato>
                 {contactoConfirmado ? (
-                  <Dato titulo="Contacto confirmado">El WhatsApp y la cuenta publicados nos los confirmó el dueño.</Dato>
+                  <Dato titulo="Contacto confirmado">{FUNCIONES.clabe ? "El WhatsApp y la cuenta publicados nos los confirmó el dueño." : "El WhatsApp publicado nos lo confirmó el dueño."}</Dato>
                 ) : (
                   <Dato titulo="Contacto oficial" pendiente>Pendiente: NEC lo publicará cuando lo confirme con el dueño.</Dato>
                 )}
@@ -112,7 +113,7 @@ async function PerfilProveedor({ params }: Pick<PageProps<"/proveedores/[slug]">
             ) : (
               <ul className="mt-4 grid gap-4 sm:grid-cols-2">
                 <Dato titulo="Pedidos comprobados">Guía, foto de entrega y pago con CEP de Banxico.</Dato>
-                <Dato titulo="Visita a instalaciones">{ETIQUETA_UBICACION[p.tipoUbicacion]}.</Dato>
+                <Dato titulo="Visita a instalaciones">Realizada por NEC.</Dato>
                 <Dato titulo="Antigüedad comprobable">{p.anios} años en el mismo punto de venta.</Dato>
                 <Dato titulo="Responsable identificado">Dueño del negocio confirmado por NEC.</Dato>
               </ul>
@@ -177,7 +178,7 @@ async function PerfilProveedor({ params }: Pick<PageProps<"/proveedores/[slug]">
             </section>
           )}
 
-          {p.compromisoDevolucion && (
+          {FUNCIONES.compromisoDevolucion && p.compromisoDevolucion && (
             <section className="rounded-md bg-arena p-6">
               <h2 className="titulo text-xl">Compromiso de devolución</h2>
               <p className="mt-2">{p.compromisoDevolucion}</p>
@@ -193,13 +194,29 @@ async function PerfilProveedor({ params }: Pick<PageProps<"/proveedores/[slug]">
               <Campo nombre="WhatsApp confirmado por NEC">
                 {p.whatsappOficial ? `+${p.whatsappOficial}` : "Por publicar"}
               </Campo>
-              <Campo nombre="Cuenta para pagos aprobada">
-                {p.clabeTerminacion ? `${p.banco ?? "CLABE"} · terminación ${p.clabeTerminacion}` : "Por publicar"}
-              </Campo>
-              <Campo nombre="Días de tianguis">{p.diasTianguis || "—"}</Campo>
-              <Campo nombre="Envíos">{p.envios || "—"}</Campo>
+              {FUNCIONES.clabe && (
+                <Campo nombre="Cuenta para pagos aprobada">
+                  {p.clabeTerminacion ? `${p.banco ?? "CLABE"} · terminación ${p.clabeTerminacion}` : "Por publicar"}
+                </Campo>
+              )}
+              <Campo nombre="Formato de venta">{formatoVenta(p).join(" · ") || "—"}</Campo>
+              {p.diasTianguis && <Campo nombre="Días de tianguis">{p.diasTianguis}</Campo>}
+              {FUNCIONES.envios && <Campo nombre="Envíos">{p.envios || "—"}</Campo>}
               <Campo nombre="Mayoreo">Desde {p.mayoreoMinimo} piezas</Campo>
             </dl>
+            {p.mapsUrl && (
+              <a
+                href={p.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="etiqueta mt-5 flex items-center justify-center gap-2 rounded border border-marino py-3 text-marino hover:bg-humo"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12Z" /><circle cx="12" cy="10" r="2.5" />
+                </svg>
+                Ver en Google Maps
+              </a>
+            )}
             {whatsapp && (
               <a
                 href={whatsapp}
@@ -214,10 +231,10 @@ async function PerfilProveedor({ params }: Pick<PageProps<"/proveedores/[slug]">
           <section className="rounded-md bg-marino p-5 text-humo">
             <h2 className="etiqueta">Ojo</h2>
             <p className="mt-2">
-              Si te escriben de otro número o te piden pagar a otra cuenta, no es este proveedor.
+              {FUNCIONES.clabe ? "Si te escriben de otro número o te piden pagar a otra cuenta, no es este proveedor." : "Si te escriben de otro número, no es este proveedor."}
             </p>
             <Link href="/verificar" className="etiqueta mt-4 inline-block rounded bg-arena px-4 py-2.5 text-marino hover:bg-white">
-              Verificar un número o cuenta
+              {FUNCIONES.clabe ? "Verificar un número o cuenta" : "Verificar un número"}
             </Link>
           </section>
         </aside>

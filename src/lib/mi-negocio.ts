@@ -10,8 +10,11 @@ export interface MiNegocio {
   slug: string;
   nombre: string;
   especialidad: string | null;
-  tipo_ubicacion: string;
-  municipio: string | null;
+  estado_republica: string | null;
+  vende_presencial: boolean;
+  vende_en_linea: boolean;
+  otros_medios: string | null;
+  maps_url: string | null;
   anios: number | null;
   mayoreo_minimo: number | null;
   descripcion: string | null;

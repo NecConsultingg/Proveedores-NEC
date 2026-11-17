@@ -1,7 +1,7 @@
 "use server";
 
 import { guardarSolicitud, obtenerDirectorio } from "@/lib/datos";
-import type { TipoUbicacion } from "@/lib/tipos";
+import { ESTADOS } from "@/lib/venta";
 
 export type EstadoFormulario = {
   ok: boolean;
@@ -10,8 +10,6 @@ export type EstadoFormulario = {
   valores: Record<string, string>;
   intento: number;
 };
-
-const UBICACIONES: TipoUbicacion[] = ["fabrica", "puesto", "fabrica_y_puesto"];
 
 export async function enviarSolicitud(prev: EstadoFormulario, fd: FormData): Promise<EstadoFormulario> {
   // Se regresan los valores capturados para no borrar el formulario si hay errores.
@@ -32,8 +30,10 @@ export async function enviarSolicitud(prev: EstadoFormulario, fd: FormData): Pro
     whatsapp: texto("whatsapp").replace(/\D/g, ""),
     correo: texto("correo"),
     especialidadSlug: texto("especialidadSlug"),
-    tipoUbicacion: texto("tipoUbicacion") as TipoUbicacion,
-    municipio: texto("municipio"),
+    vendePresencial: fd.get("vende_presencial") === "on",
+    vendeEnLinea: fd.get("vende_en_linea") === "on",
+    otrosMedios: texto("otros_medios", 300),
+    estado: texto("estado_republica"),
     anios: Number(texto("anios")),
     redes: texto("redes", 500),
     clienteNec: fd.get("clienteNec") === "si",
@@ -47,8 +47,9 @@ export async function enviarSolicitud(prev: EstadoFormulario, fd: FormData): Pro
   if (datos.correo && !/^\S+@\S+\.\S+$/.test(datos.correo)) errores.correo = "Revisa el correo.";
   const { subcategorias } = await obtenerDirectorio();
   if (!subcategorias.some((s) => s.slug === datos.especialidadSlug)) errores.especialidadSlug = "Elige tu especialidad.";
-  if (!UBICACIONES.includes(datos.tipoUbicacion)) errores.tipoUbicacion = "Elige dónde vendes.";
-  if (datos.municipio.length < 2) errores.municipio = "Escribe el municipio.";
+  if (!datos.vendePresencial && !datos.vendeEnLinea && !datos.otrosMedios)
+    errores.formatoVenta = "Marca cómo vendes: presencial, en línea u otros medios.";
+  if (!(ESTADOS as readonly string[]).includes(datos.estado)) errores.estado = "Elige tu estado.";
   if (texto("anios") === "" || !Number.isInteger(datos.anios) || datos.anios < 0 || datos.anios > 80) errores.anios = "Escribe los años en números.";
   if (fd.get("aceptaAviso") !== "on") errores.aceptaAviso = "Necesitamos tu autorización para guardar tus datos.";
 
