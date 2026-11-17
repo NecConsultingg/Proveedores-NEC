@@ -65,7 +65,8 @@ export interface Proveedor {
   estadoSello: EstadoSello;
   evaluadoEn: string | null; // ISO date
   proximaRevision: string | null;
-  whatsappOficial: string | null; // solo dígitos con lada, ej. 522481234567
+  whatsappOficial: string | null; // el principal: solo dígitos con lada, ej. 522481234567
+  whatsapps: string[]; // todos los números confirmados (1 a 5); el primero es el principal
   banco: string | null;
   clabeTerminacion: string | null;
   diasTianguis: string;

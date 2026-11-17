@@ -14,6 +14,7 @@ export type ProveedorPanel = {
   vende_en_linea: boolean;
   otros_medios: string | null;
   maps_url: string | null;
+  whatsapps: string[] | null;
   anios: number;
   mayoreo_minimo: number;
   descripcion: string | null;

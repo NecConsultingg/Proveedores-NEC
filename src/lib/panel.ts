@@ -66,6 +66,7 @@ export const CAMPOS: Record<string, string> = {
   vende_en_linea: "Vende en línea",
   otros_medios: "Otros medios de venta",
   maps_url: "Ubicación en Google Maps",
+  whatsapps: "WhatsApp",
 };
 
 export const TIPO_CAMBIO: Record<string, string> = {
@@ -73,6 +74,7 @@ export const TIPO_CAMBIO: Record<string, string> = {
   edicion: "Edición",
   baja: "Baja (retiro del sello)",
   sello: "Sello",
+  registro: "Registro del proveedor",
 };
 
 export const ESTADO_CAMBIO: Record<string, string> = {
@@ -90,6 +92,7 @@ export const fecha = (iso: string | null | undefined) =>
 export function valorLegible(campo: string, v: unknown, especialidades?: { id: string; nombre: string }[]) {
   if (v === null || v === undefined || v === "") return "—";
   if (typeof v === "boolean") return v ? "Sí" : "No";
+  if (Array.isArray(v)) return v.map((x) => (campo === "whatsapps" ? `+${x}` : String(x))).join(", ");
   if (campo === "especialidad_id") return especialidades?.find((e) => e.id === v)?.nombre ?? String(v);
   if (campo === "clabe_oficial") return `•••• ${String(v).slice(-4)}`;
   if (campo === "tipo_ubicacion")

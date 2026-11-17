@@ -6,6 +6,10 @@ import { rpc } from "./panel";
 export interface MiNegocio {
   correo: string;
   debe_cambiar: boolean;
+  falta_registro: boolean;
+  registro_en_revision: boolean;
+  ultimo_rechazo: string | null;
+  whatsapps: string[] | null;
   id: string;
   slug: string;
   nombre: string;
@@ -30,6 +34,7 @@ export interface MiNegocio {
   proxima_revision: string | null;
   cambios: {
     id: string;
+    tipo: string;
     estado: string;
     datos: Record<string, unknown>;
     motivo: string;

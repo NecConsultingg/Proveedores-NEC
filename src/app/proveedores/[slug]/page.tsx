@@ -10,7 +10,7 @@ import { CALENDARIO, FUNCIONES } from "@/lib/config";
 import { obtenerProveedor } from "@/lib/datos";
 import { publicosDe } from "@/lib/filtros";
 import { nombrePublico, type Proveedor } from "@/lib/tipos";
-import { formatoVenta } from "@/lib/venta";
+import { formatoVenta, mostrarWhatsapp } from "@/lib/venta";
 
 export async function generateMetadata({ params }: PageProps<"/proveedores/[slug]">): Promise<Metadata> {
   const { directorio, proveedor: p } = await obtenerProveedor((await params).slug);
@@ -191,8 +191,16 @@ async function PerfilProveedor({ params }: Pick<PageProps<"/proveedores/[slug]">
           <section className="rounded-md border border-black/5 bg-white p-5">
             <h2 className="titulo text-lg">Contacto oficial</h2>
             <dl className="mt-3 space-y-3">
-              <Campo nombre="WhatsApp confirmado por NEC">
-                {p.whatsappOficial ? `+${p.whatsappOficial}` : "Por publicar"}
+              <Campo nombre={p.whatsapps.length > 1 ? "WhatsApp confirmados por NEC" : "WhatsApp confirmado por NEC"}>
+                {p.whatsapps.length === 0 ? "Por publicar" : (
+                  <span className="flex flex-col">
+                    {p.whatsapps.map((w) => (
+                      <a key={w} href={`https://wa.me/${w}`} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                        {mostrarWhatsapp(w)}
+                      </a>
+                    ))}
+                  </span>
+                )}
               </Campo>
               {FUNCIONES.clabe && (
                 <Campo nombre="Cuenta para pagos aprobada">

@@ -2,6 +2,7 @@
 
 import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
+import { leerWhatsapps } from "@/lib/formulario-whatsapp";
 import { rpc } from "@/lib/panel";
 
 export type EstadoAccion = { ok: boolean; mensaje: string };
@@ -54,6 +55,11 @@ export async function proponerCambio(_prev: EstadoAccion, fd: FormData): Promise
       continue;
     }
     datos[campo] = nuevo;
+  }
+  if (fd.has("whatsapps") || fd.has("original_whatsapps")) {
+    const { numeros, error } = leerWhatsapps(fd);
+    if (error) return { ok: false, mensaje: error };
+    if (numeros.join(",") !== String(fd.get("original_whatsapps") ?? "")) datos.whatsapps = numeros.length ? numeros : null;
   }
   if (motivo.length < 3) return { ok: false, mensaje: "Escribe el motivo del cambio." };
   let destino: string | null = null;
@@ -154,7 +160,7 @@ export async function activarMiembro(_prev: EstadoAccion, fd: FormData): Promise
 
 // ---------- Cuentas de proveedor ----------
 
-export type EstadoCuenta = EstadoAccion & { correo?: string; contrasena?: string };
+export type EstadoCuenta = EstadoAccion & { correo?: string; contrasena?: string; proveedorId?: string; negocio?: string };
 
 export async function crearCuentaProveedor(_prev: EstadoCuenta, fd: FormData): Promise<EstadoCuenta> {
   try {
@@ -187,6 +193,24 @@ export async function activarCuentaProveedor(_prev: EstadoAccion, fd: FormData):
     });
     revalidatePath("/panel", "layout");
     return { ok: true, mensaje: "Listo." };
+  } catch (e) {
+    return fallo(e);
+  }
+}
+
+// Alta con cuenta en un paso: solo correo, nombre y especialidad. El proveedor llena lo demás al entrar.
+export async function altaConCuenta(_prev: EstadoCuenta, fd: FormData): Promise<EstadoCuenta> {
+  try {
+    const r = await rpc<{ correo: string; contrasena: string; proveedor_id: string }>("panel_alta_con_cuenta", {
+      nombre: String(fd.get("nombre") ?? ""),
+      especialidad: String(fd.get("especialidad_id") ?? ""),
+      correo: String(fd.get("correo") ?? ""),
+    });
+    revalidatePath("/panel", "layout");
+    return {
+      ok: true, mensaje: "Proveedor y cuenta creados.", correo: r.correo, contrasena: r.contrasena,
+      proveedorId: r.proveedor_id, negocio: String(fd.get("nombre") ?? "").trim(),
+    };
   } catch (e) {
     return fallo(e);
   }

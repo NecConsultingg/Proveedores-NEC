@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { salir } from "@/app/acceso/acciones";
-import { NOMBRE_NIVEL, obtenerMiembro, rango, type Nivel } from "@/lib/panel";
+import { NOMBRE_NIVEL, obtenerMiembro, rango, rpc, type Nivel } from "@/lib/panel";
 
 export const metadata: Metadata = {
   title: { default: "Panel NEC", template: "%s · Panel NEC" },
@@ -29,6 +29,10 @@ export default function LayoutPanel({ children }: LayoutProps<"/panel">) {
 
 async function Marco({ children }: { children: React.ReactNode }) {
   const m = await obtenerMiembro();
+  // Aviso en el menú: cuántos cambios (incluidos registros nuevos de proveedores) esperan tu aprobación.
+  const pendientes = rango(m.nivel) >= 2
+    ? await rpc<{ por_aprobar_por_mi: number }>("panel_resumen").then((r) => r.por_aprobar_por_mi).catch(() => 0)
+    : 0;
   return (
     <div className="mx-auto grid max-w-7xl gap-6 px-5 py-8 md:grid-cols-[220px_1fr]">
       <aside className="space-y-5">
@@ -41,6 +45,9 @@ async function Marco({ children }: { children: React.ReactNode }) {
           {MENU.filter((i) => rango(m.nivel) >= rango(i.minimo)).map((i) => (
             <Link key={i.href} href={i.href} className="rounded px-3 py-2 hover:bg-arena">
               {i.texto}
+              {i.href === "/panel/aprobaciones" && pendientes > 0 && (
+                <span className="ml-2 rounded-full bg-red-700 px-2 py-0.5 text-xs font-semibold text-white">{pendientes}</span>
+              )}
             </Link>
           ))}
         </nav>

@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { FormaAccion } from "@/app/panel/forma-accion";
 import { CampoMaps } from "@/components/campo-maps";
 import { CamposVenta } from "@/components/campos-venta";
+import { CamposWhatsapp } from "@/components/campos-whatsapp";
 import { FUNCIONES } from "@/lib/config";
 import { ESTADOS } from "@/lib/venta";
 import { CAMPOS, ESTADO_CAMBIO, fecha, valorLegible } from "@/lib/panel";
@@ -15,7 +16,7 @@ const ESTADO_PARA_PROVEEDOR: Record<string, string> = { ...ESTADO_CAMBIO, pendie
 export default async function MiNegocioInicio({ searchParams }: PageProps<"/mi-negocio">) {
   const n = await obtenerNegocio();
   if (n.debe_cambiar) redirect("/mi-negocio/contrasena");
-  const whatsapp = n.whatsapp_oficial?.replace(/^52/, "") ?? "";
+  if (n.falta_registro) redirect(`/mi-negocio/registro${(await searchParams).listo ? "?listo=1" : ""}`);
 
   return (
     <div className="space-y-6">
@@ -23,6 +24,12 @@ export default async function MiNegocioInicio({ searchParams }: PageProps<"/mi-n
         <AvisoListo searchParams={searchParams} />
       </Suspense>
 
+      {n.registro_en_revision && (
+        <p className="rounded border border-marino/20 bg-arena p-4" role="status">
+          <b>¡Gracias! Recibimos tu registro.</b> El equipo NEC lo está revisando; te avisaremos cuando tu negocio quede
+          publicado. Mientras tanto no necesitas hacer nada más.
+        </p>
+      )}
       <section className="grid gap-4 sm:grid-cols-3">
         <Dato titulo="Sello" valor={NOMBRE_SELLO[n.estado_sello]} />
         <Dato titulo="En el directorio" valor={n.publicado ? "Publicado" : "Aún no publicado"} />
@@ -34,6 +41,7 @@ export default async function MiNegocioInicio({ searchParams }: PageProps<"/mi-n
         </p>
       )}
 
+      {!n.registro_en_revision && (
       <section className="rounded-md border border-black/5 bg-white p-6">
         <h2 className="titulo text-xl">Mis datos</h2>
         <p className="mt-1 text-sm text-pizarra">
@@ -45,7 +53,7 @@ export default async function MiNegocioInicio({ searchParams }: PageProps<"/mi-n
         </p>
         <FormaAccion accion={proponerDesdeProveedor} boton="Enviar cambios a revisión" className="mt-4 space-y-5">
           <div className="grid gap-4 sm:grid-cols-2">
-            <Campo n={n} k="whatsapp_oficial" etiqueta="WhatsApp oficial (10 dígitos)" valor={whatsapp} inputMode="tel" />
+            <CamposWhatsapp valores={n.whatsapps} conOriginales />
             <label className="block">
               <span className="text-sm font-semibold">Estado</span>
               <select name="estado_republica" defaultValue={n.estado_republica ?? ""} className={campo}>
@@ -71,6 +79,7 @@ export default async function MiNegocioInicio({ searchParams }: PageProps<"/mi-n
           </label>
         </FormaAccion>
       </section>
+      )}
 
       <section>
         <h2 className="titulo text-xl">Cambios que he enviado</h2>
@@ -80,9 +89,12 @@ export default async function MiNegocioInicio({ searchParams }: PageProps<"/mi-n
           <ul className="mt-3 space-y-2">
             {n.cambios.map((c) => (
               <li key={c.id} className="rounded border border-black/5 bg-white p-3 text-sm">
-                <b>{ESTADO_PARA_PROVEEDOR[c.estado] ?? c.estado}</b> · enviado {fecha(c.propuesto_en)}
+                <b>{c.tipo === "registro" ? "Registro · " : ""}{ESTADO_PARA_PROVEEDOR[c.estado] ?? c.estado}</b> · enviado {fecha(c.propuesto_en)}
                 <p className="text-pizarra">
-                  {Object.entries(c.datos).map(([k, v]) => `${CAMPOS[k] ?? k}: ${valorLegible(k, v)}`).join(" · ")}
+                  {Object.entries(c.datos)
+                    .filter(([k, v]) => v !== null && v !== "" && k !== "consentimiento_publicacion_en")
+                    .map(([k, v]) => `${CAMPOS[k] ?? k}: ${valorLegible(k, v)}`)
+                    .join(" · ")}
                 </p>
                 {c.comentario_revision && <p>Respuesta del equipo NEC: {c.comentario_revision}</p>}
               </li>

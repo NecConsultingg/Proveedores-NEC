@@ -18,7 +18,11 @@ Entren en: ${SITIO}
 Usuario: ${correo}
 Contraseña temporal: ${contrasena}
 
-La primera vez que entren les pediremos cambiar la contraseña temporal por una suya. Ahí pueden ver cómo aparece su negocio y enviarnos cambios (WhatsApp, descripción, días de tianguis…); el equipo NEC los revisa antes de publicarlos.
+La primera vez que entren les pediremos:
+1. Cambiar la contraseña temporal por una suya.
+2. Llenar el registro de su negocio: estado, cómo venden, sus números de WhatsApp (hasta 5), años en el negocio, mayoreo y su ubicación en Google Maps.
+
+Cuando lo envíen, el equipo NEC lo revisa y les avisamos al publicarlo.
 
 Cualquier duda, respondan este correo.
 
@@ -96,7 +100,7 @@ export function CuentaProveedor({ proveedorId, negocio, cuenta }: { proveedorId:
   );
 }
 
-function Credenciales({ negocio, correo, contrasena, aviso }: { negocio: string; correo: string; contrasena: string; aviso: string }) {
+export function Credenciales({ negocio, correo, contrasena, aviso }: { negocio: string; correo: string; contrasena: string; aviso: string }) {
   const [copiado, setCopiado] = useState(false);
   const texto = textoCorreo(negocio, correo, contrasena);
   const asunto = "Tu acceso al Directorio de Proveedores NEC";

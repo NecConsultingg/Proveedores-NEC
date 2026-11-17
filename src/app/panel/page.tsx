@@ -6,6 +6,7 @@ type Resumen = {
   proveedores_demo: number;
   proveedores_sin_publicar: number;
   cambios_pendientes: number;
+  registros_nuevos: number;
   por_aprobar_por_mi: number;
   solicitudes_nuevas: number;
   solicitudes_total: number;
@@ -14,6 +15,7 @@ type Resumen = {
 export default async function ResumenPanel() {
   const [m, r] = await Promise.all([obtenerMiembro(), rpc<Resumen>("panel_resumen")]);
   const tarjetas = [
+    { titulo: "Registros nuevos de proveedores", valor: r.registros_nuevos, href: "/panel/aprobaciones", destacar: r.registros_nuevos > 0 },
     { titulo: "Por aprobar por ti", valor: r.por_aprobar_por_mi, href: "/panel/aprobaciones", destacar: r.por_aprobar_por_mi > 0 },
     { titulo: "Cambios pendientes (todos)", valor: r.cambios_pendientes, href: "/panel/aprobaciones" },
     { titulo: "Solicitudes nuevas", valor: r.solicitudes_nuevas, href: "/panel/solicitudes", destacar: r.solicitudes_nuevas > 0 },

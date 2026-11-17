@@ -34,10 +34,12 @@ export function FormularioAcceso() {
       return;
     }
     const { data } = await supabase.rpc("mi_destino");
-    const destino = data as { tipo: "equipo" | "proveedor" | null; debe_cambiar?: boolean } | null;
+    const destino = data as { tipo: "equipo" | "proveedor" | null; debe_cambiar?: boolean; falta_registro?: boolean } | null;
     if (destino?.tipo === "equipo") return window.location.replace("/panel");
     if (destino?.tipo === "proveedor")
-      return window.location.replace(destino.debe_cambiar ? "/mi-negocio/contrasena" : "/mi-negocio");
+      return window.location.replace(
+        destino.debe_cambiar ? "/mi-negocio/contrasena" : destino.falta_registro ? "/mi-negocio/registro" : "/mi-negocio",
+      );
     await supabase.auth.signOut();
     setEntrando(false);
     setError("Tu cuenta no tiene acceso o está desactivada. Escríbele al equipo NEC.");

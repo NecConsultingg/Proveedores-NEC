@@ -1,5 +1,6 @@
 import { CampoMaps } from "@/components/campo-maps";
 import { CamposVenta } from "@/components/campos-venta";
+import { CamposWhatsapp } from "@/components/campos-whatsapp";
 import { FUNCIONES } from "@/lib/config";
 import { ESTADOS } from "@/lib/venta";
 import type { ProveedorPanel } from "./page";
@@ -50,7 +51,7 @@ export function CamposProveedor({ p, especialidades }: { p?: ProveedorPanel; esp
       </label>
       {texto("anios", "Años en el negocio", { inputMode: "numeric" })}
       {texto("mayoreo_minimo", "Mayoreo desde (piezas)", { inputMode: "numeric" })}
-      {texto("whatsapp_oficial", "WhatsApp oficial (10 dígitos)", { inputMode: "tel" })}
+      <CamposWhatsapp valores={p?.whatsapps} conOriginales={Boolean(p)} />
       {FUNCIONES.clabe && texto("banco", "Banco")}
       {FUNCIONES.clabe && texto("clabe_oficial", "CLABE oficial (18 dígitos)", { inputMode: "numeric" })}
       {texto("dias_tianguis", "Días de tianguis")}

@@ -32,3 +32,19 @@ export function formatoVenta(p: { vendePresencial: boolean; vendeEnLinea: boolea
   if (p.otrosMedios?.trim()) partes.push(p.otrosMedios.trim());
   return partes;
 }
+
+export const MAX_WHATSAPPS = 5;
+
+// «248 123 4567» → «522481234567». Devuelve null si no tiene 10 dígitos (o 12–13 con lada).
+export function normalizarWhatsapp(crudo: string): string | null {
+  const d = crudo.replace(/\D/g, "");
+  if (d.length === 10) return `52${d}`;
+  if (d.length >= 12 && d.length <= 13) return d;
+  return null;
+}
+
+// «522481234567» → «248 123 4567» para mostrar.
+export function mostrarWhatsapp(n: string) {
+  const d = n.replace(/^52(1)?/, "");
+  return d.length === 10 ? `${d.slice(0, 3)} ${d.slice(3, 6)} ${d.slice(6)}` : n;
+}
