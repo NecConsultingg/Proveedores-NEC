@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { AvisoDemo } from "@/components/aviso-demo";
 import { TarjetaProveedor } from "@/components/tarjeta-proveedor";
-import { CALENDARIO, FUNCIONES, LEYENDA_PILOTO } from "@/lib/config";
+import { FUNCIONES, LEYENDA_PILOTO } from "@/lib/config";
 import { obtenerDirectorio } from "@/lib/datos";
 import { filtrar } from "@/lib/filtros";
 import { PUBLICOS, type Publico } from "@/lib/tipos";
@@ -10,7 +10,7 @@ import { PUBLICOS, type Publico } from "@/lib/tipos";
 const PILARES = [
   { titulo: "Clientes de NEC", texto: "Negocios con los que ya trabajamos y conocemos de primera mano." },
   { titulo: "Contacto oficial", texto: `Solo publicamos el WhatsApp${FUNCIONES.clabe ? " y la cuenta" : ""} que el dueño nos confirmó.` },
-  { titulo: "Evaluación en febrero", texto: "En la temporada 2027 revisaremos pedidos, pagos e instalaciones." },
+  { titulo: "Revisado por NEC", texto: "El equipo NEC revisa cada dato antes de publicarlo." },
   { titulo: "Lugares limitados", texto: "Pocos especialistas por categoría, para que el directorio tenga filtro." },
 ];
 
@@ -166,9 +166,8 @@ function Portada() {
           <p className="etiqueta text-acero">Directorio de proveedores · Texmelucan y región</p>
           <h1 className="titulo mt-4 max-w-xl text-4xl leading-tight sm:text-5xl">Proveedores que sí cumplen.</h1>
           <p className="mt-5 max-w-xl text-lg text-humo/90">
-            Empezamos con los proveedores de ropa y calzado al mayoreo con los que NEC ya trabaja. En febrero de 2027 arranca la
-            primera temporada oficial de evaluación: pedidos comprobados
-            {FUNCIONES.compromisoDevolucion ? ", visita a instalaciones y compromiso de devolución por escrito." : " y visita a instalaciones."}
+            Empezamos con los proveedores de ropa y calzado al mayoreo con los que NEC ya trabaja. Lugares limitados por
+            categoría: solo entran los mejores.
           </p>
           <form action="/#directorio" className="mt-8 flex max-w-xl flex-col gap-3 sm:flex-row">
             <label htmlFor="q" className="sr-only">Buscar proveedor o producto</label>
@@ -207,15 +206,14 @@ function LlamadoProveedores() {
       <div className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-5 py-14 md:flex-row md:items-center md:justify-between">
         <div className="max-w-2xl">
           <p className="etiqueta text-acero">¿Eres proveedor?</p>
-          <h2 className="titulo mt-2 text-3xl">Temporada de evaluación 2027</h2>
+          <h2 className="titulo mt-2 text-3xl">Los espacios ya se empezaron a ocupar</h2>
           <p className="mt-3 text-humo/90">
-            Las auditorías son en {CALENDARIO.temporadaAuditorias} y los resultados se publican en la{" "}
-            {CALENDARIO.publicacion}. Hay pocos lugares por especialidad. Recibimos solicitudes hasta el{" "}
-            {CALENDARIO.cierreConvocatoria}.
+            Cada categoría tiene lugares limitados, y solo entran los mejores. Si tu negocio está entre ellos, aplica a un
+            espacio como proveedor candidato.
           </p>
         </div>
         <Link href="/quiero-ser-auditado" className="etiqueta shrink-0 rounded bg-arena px-6 py-3.5 text-marino hover:bg-white">
-          Quiero ser auditado
+          Aplica a un espacio
         </Link>
       </div>
     </section>

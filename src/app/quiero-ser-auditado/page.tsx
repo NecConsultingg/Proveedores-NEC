@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import { CALENDARIO, FUNCIONES } from "@/lib/config";
+import { FUNCIONES } from "@/lib/config";
 import { obtenerDirectorio } from "@/lib/datos";
 import { Formulario } from "./formulario";
 
-export const metadata: Metadata = { title: "Quiero ser auditado" };
+export const metadata: Metadata = { title: "Aplica a un espacio" };
 
 const PASOS = [
-  ["Solicitud", `Llena el formulario antes del ${CALENDARIO.cierreConvocatoria}.`],
-  ["Preselección", "A finales de enero asignamos los lugares por especialidad y firmamos el contrato."],
-  ["Auditoría", `En ${CALENDARIO.temporadaAuditorias}: pedidos comprobados${FUNCIONES.compromisoDevolucion ? ", visita y compromiso de devolución" : " y visita a instalaciones"}.`],
-  ["Publicación", `Los proveedores verificados se publican en la ${CALENDARIO.publicacion}.`],
+  ["Solicitud", "Llena el formulario: te registras como proveedor candidato."],
+  ["Contacto", "El equipo NEC revisa tu solicitud y te escribe por WhatsApp."],
+  ["Revisión", `Pedidos comprobados${FUNCIONES.compromisoDevolucion ? ", visita y compromiso de devolución" : " y visita a instalaciones"}.`],
+  ["Tu espacio", "Si quedas, tu negocio ocupa su lugar en el directorio."],
 ];
 
 export default async function QuieroSerAuditado() {
@@ -18,11 +18,12 @@ export default async function QuieroSerAuditado() {
     <>
       <section className="patron-nec text-humo">
         <div className="mx-auto max-w-6xl px-5 py-12">
-          <p className="etiqueta text-acero">Temporada de evaluación 2027</p>
-          <h1 className="titulo mt-3 text-3xl sm:text-4xl">Quiero ser auditado</h1>
+          <p className="etiqueta text-acero">Proveedores candidatos</p>
+          <h1 className="titulo mt-3 text-3xl sm:text-4xl">Aplica a un espacio</h1>
           <p className="mt-3 max-w-2xl text-humo/90">
-            Hay pocos lugares por especialidad y cada proveedor ocupa uno solo, aunque venda para dama, caballero y niño. Si vendes ropa o calzado al mayoreo en Texmelucan o la región, aparta tu
-            lugar para la evaluación de febrero.
+            Los espacios ya se empezaron a ocupar. Hay pocos lugares por especialidad y cada proveedor ocupa uno solo,
+            aunque venda para dama, caballero y niño. Si vendes ropa o calzado al mayoreo en Texmelucan o la región y tu
+            negocio está entre los mejores, aplica como proveedor candidato.
           </p>
         </div>
       </section>

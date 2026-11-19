@@ -37,7 +37,7 @@ export default async function Solicitudes() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="titulo text-3xl">Solicitudes «Quiero ser auditado»</h1>
+        <h1 className="titulo text-3xl">Solicitudes «Aplica a un espacio»</h1>
         <p className="mt-1 text-pizarra">
           Contacta en menos de 3 días hábiles. La convocatoria cierra el 22 de enero de 2027. La preselección la decide un
           administrador.

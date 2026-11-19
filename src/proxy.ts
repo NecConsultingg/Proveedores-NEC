@@ -1,8 +1,21 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { antesDelLanzamiento } from "@/lib/config";
 
-// Refresca la sesión de Supabase en las rutas privadas y manda a /acceso a quien no la tenga.
+// Páginas del directorio que, antes de la apertura, solo ve quien inició sesión (proveedores y equipo NEC).
+const conConteo = (ruta: string) => ruta === "/" || ruta === "/verificar" || ruta.startsWith("/proveedores/");
+const privada = (ruta: string) => ruta.startsWith("/panel") || ruta.startsWith("/mi-negocio");
+
+// Refresca la sesión de Supabase, manda a /acceso a quien no la tenga en las rutas privadas
+// y muestra la cuenta regresiva a los visitantes antes de la apertura del directorio.
 export async function proxy(request: NextRequest) {
+  const ruta = request.nextUrl.pathname;
+  if (ruta === "/proximamente") {
+    return antesDelLanzamiento() ? NextResponse.next() : NextResponse.redirect(new URL("/", request.url));
+  }
+  // Ya abierto el directorio, las páginas públicas no necesitan revisar la sesión.
+  if (conConteo(ruta) && !antesDelLanzamiento()) return NextResponse.next();
+
   let respuesta = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -22,7 +35,18 @@ export async function proxy(request: NextRequest) {
   );
 
   const { data } = await supabase.auth.getClaims();
-  if (!data?.claims && (request.nextUrl.pathname.startsWith("/panel") || request.nextUrl.pathname.startsWith("/mi-negocio"))) {
+
+  if (conConteo(ruta)) {
+    if (data?.claims) return respuesta; // proveedores y equipo NEC ya ven el directorio
+    const conteo = request.nextUrl.clone();
+    conteo.pathname = "/proximamente";
+    conteo.search = "";
+    const r = NextResponse.rewrite(conteo);
+    r.headers.set("Cache-Control", "private, no-store");
+    return r;
+  }
+
+  if (!data?.claims && privada(ruta)) {
     const destino = request.nextUrl.clone();
     destino.pathname = "/acceso";
     destino.search = "";
@@ -33,5 +57,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/panel/:path*", "/mi-negocio/:path*", "/acceso", "/acceso/:path*", "/auth/:path*"],
+  matcher: ["/", "/proximamente", "/verificar", "/proveedores/:path*", "/panel/:path*", "/mi-negocio/:path*", "/acceso", "/acceso/:path*", "/auth/:path*"],
 };

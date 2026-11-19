@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import { AvisoDemo } from "@/components/aviso-demo";
 import { InsigniaSello } from "@/components/insignia-sello";
 import { MapaUbicacion } from "@/components/mapa-ubicacion";
-import { CALENDARIO, FUNCIONES } from "@/lib/config";
+import { FUNCIONES } from "@/lib/config";
 import { obtenerProveedor } from "@/lib/datos";
 import { publicosDe } from "@/lib/filtros";
 import { nombrePublico, type Proveedor } from "@/lib/tipos";
@@ -30,7 +30,7 @@ const mesAnio = (iso: string) =>
 function lineaEstado(p: Proveedor) {
   switch (p.estadoSello) {
     case "aliado":
-      return `Cliente de NEC · evaluación oficial en ${CALENDARIO.temporadaAuditorias}`;
+      return "Cliente de NEC · aún sin evaluación oficial";
     case "vigente":
       return `Evaluado ${p.evaluadoEn ? mesAnio(p.evaluadoEn) : ""} · Próxima revisión ${p.proximaRevision ? mesAnio(p.proximaRevision) : ""}`;
     case "suspendido":
@@ -107,7 +107,7 @@ async function PerfilProveedor({ params }: Pick<PageProps<"/proveedores/[slug]">
                 )}
                 <Dato titulo="Antigüedad declarada">{p.anios} años en el negocio (se comprobará en la evaluación).</Dato>
                 <Dato titulo="Evaluación oficial" pendiente>
-                  Pendiente: temporada de {CALENDARIO.temporadaAuditorias}.
+                  Pendiente. NEC la publicará aquí cuando se realice.
                 </Dato>
               </ul>
             ) : (

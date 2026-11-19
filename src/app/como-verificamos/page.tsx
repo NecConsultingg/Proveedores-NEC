@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CALENDARIO, FUNCIONES } from "@/lib/config";
+import { FUNCIONES } from "@/lib/config";
 
 export const metadata: Metadata = { title: "Cómo verificamos" };
 
@@ -45,15 +45,10 @@ export default function ComoVerificamos() {
 
       <div className="mx-auto max-w-4xl space-y-12 px-5 py-12">
         <section className="rounded-md bg-arena p-6">
-          <h2 className="titulo text-xl">Calendario 2027</h2>
-          <ul className="mt-3 space-y-1">
-            <li><strong>Hasta el {CALENDARIO.cierreConvocatoria}:</strong> recibimos solicitudes.</li>
-            <li><strong>{CALENDARIO.temporadaAuditorias[0].toUpperCase() + CALENDARIO.temporadaAuditorias.slice(1)}:</strong> temporada de auditorías.</li>
-            <li><strong>{CALENDARIO.publicacion[0].toUpperCase() + CALENDARIO.publicacion.slice(1)}:</strong> publicamos a los proveedores verificados.</li>
-          </ul>
-          <p className="mt-3 text-sm text-pizarra">
-            Mientras tanto, el directorio muestra a proveedores aliados: clientes actuales de NEC que todavía no pasan por la
-            evaluación oficial.
+          <h2 className="titulo text-xl">Etapa actual</h2>
+          <p className="mt-3">
+            Por ahora el directorio muestra a proveedores aliados: clientes actuales de NEC que todavía no pasan por la
+            evaluación oficial «Verificado por NEC». Los espacios ya se empezaron a ocupar.
           </p>
         </section>
 
@@ -89,9 +84,9 @@ export default function ComoVerificamos() {
 
         <section className="rounded-md bg-marino p-6 text-humo">
           <h2 className="titulo text-xl">¿Eres proveedor?</h2>
-          <p className="mt-2">Aparta tu lugar para la temporada de febrero.</p>
+          <p className="mt-2">Cada categoría tiene lugares limitados. Si tu negocio está entre los mejores, aplica como proveedor candidato.</p>
           <Link href="/quiero-ser-auditado" className="etiqueta mt-4 inline-block rounded bg-arena px-5 py-3 text-marino">
-            Quiero ser auditado
+            Aplica a un espacio
           </Link>
         </section>
       </div>

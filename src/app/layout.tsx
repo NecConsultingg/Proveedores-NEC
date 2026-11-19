@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     template: "%s · Directorio NEC",
   },
   description:
-    "Proveedores de ropa y calzado al mayoreo de San Martín Texmelucan con los que NEC ya trabaja. Temporada oficial de evaluación: febrero 2027.",
+    "Proveedores de ropa y calzado al mayoreo de San Martín Texmelucan con los que NEC ya trabaja. Lugares limitados por categoría.",
   appleWebApp: { title: "Directorio NEC", statusBarStyle: "black-translucent" },
 };
 

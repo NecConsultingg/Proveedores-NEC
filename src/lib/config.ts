@@ -13,12 +13,16 @@ export const FUNCIONES = {
   notasInternas: false, // cuadro de notas internas en la ficha del panel
 };
 
-export const LEYENDA_PILOTO =
-  "Proveedores aliados NEC · evaluación oficial en febrero 2027";
+// Apertura del directorio al público (decidido 19-nov-2026): antes de esta hora, quien no ha iniciado sesión
+// ve la cuenta regresiva en el inicio, los perfiles y «Verificar número». Proveedores y equipo NEC ya pueden entrar.
+// Hora del centro de México (UTC−6). Para mover la fecha basta con cambiar esta línea y volver a publicar.
+export const LANZAMIENTO = "2026-11-22T00:00:00-06:00";
+export const antesDelLanzamiento = (ahora = Date.now()) => ahora < Date.parse(LANZAMIENTO);
+
+export const LEYENDA_PILOTO = "Proveedores aliados NEC";
 
 export const AVISO_LEGAL =
-  "Este directorio reúne a proveedores con los que NEC ya trabaja. Todavía no es la evaluación oficial: " +
-  "la primera temporada de auditorías es en febrero de 2027 y sus resultados se publican en abril. " +
+  "Este directorio reúne a proveedores con los que NEC ya trabaja. Todavía no es la evaluación oficial. " +
   "«Verificado por NEC» será una evaluación privada del historial del proveedor a la fecha de revisión; no es una " +
   "certificación oficial, no garantiza operaciones futuras y NEC no es parte de la compraventa.";
 

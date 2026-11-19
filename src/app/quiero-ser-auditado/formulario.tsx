@@ -90,7 +90,7 @@ export function Formulario({ subcategorias }: { subcategorias: Subcategoria[] })
           <label className="flex items-center gap-2"><input type="radio" name="clienteNec" value="si" defaultChecked={v.clienteNec === "si"} /> Sí</label>
           <label className="flex items-center gap-2"><input type="radio" name="clienteNec" value="no" defaultChecked={v.clienteNec !== "si"} /> No</label>
         </div>
-        <p className="text-sm text-pizarra">Ser cliente da prioridad para la evaluación, pero no el sello automático.</p>
+        <p className="text-sm text-pizarra">Ser cliente de NEC da prioridad, pero no un lugar automático.</p>
       </fieldset>
       <Campo etiqueta="Comentarios (opcional)">
         <textarea name="comentarios" defaultValue={v.comentarios} rows={3} className={campo} />
@@ -100,7 +100,7 @@ export function Formulario({ subcategorias }: { subcategorias: Subcategoria[] })
           <input type="checkbox" name="aceptaAviso" defaultChecked={v.aceptaAviso === "on"} className="mt-1.5" />
           <span>
             Acepto el <Link href="/aviso-de-privacidad" className="underline" target="_blank">aviso de privacidad</Link> y
-            autorizo a NEC a contactarme por WhatsApp sobre la evaluación.
+            autorizo a NEC a contactarme por WhatsApp sobre mi solicitud.
           </span>
         </label>
         {e.aceptaAviso && <p className="mt-1 text-sm text-red-700">{e.aceptaAviso}</p>}

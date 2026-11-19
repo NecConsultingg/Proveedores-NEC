@@ -12,7 +12,7 @@ export function Pie() {
           <div className="flex flex-col gap-1 text-sm">
             <Link href="/como-verificamos" className="hover:text-white">Cómo verificamos</Link>
             <Link href="/verificar" className="hover:text-white">{FUNCIONES.clabe ? "Verificar número o cuenta" : "Verificar número"}</Link>
-            <Link href="/quiero-ser-auditado" className="hover:text-white">Quiero ser auditado</Link>
+            <Link href="/quiero-ser-auditado" className="hover:text-white">Aplica a un espacio</Link>
             <Link href="/aviso-de-privacidad" className="hover:text-white">Aviso de privacidad</Link>
             <Link href="/terminos" className="hover:text-white">Términos y condiciones</Link>
           </div>
