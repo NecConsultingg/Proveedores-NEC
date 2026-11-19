@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { antesDelLanzamiento } from "@/lib/config";
+import { COOKIE_RECORDAR, opcionesCookie, quiereRecordar } from "@/lib/supabase/cookies";
 
 // Páginas del directorio que, antes de la apertura, solo ve quien inició sesión (proveedores y equipo NEC).
 const conConteo = (ruta: string) => ruta === "/" || ruta === "/verificar" || ruta.startsWith("/proveedores/");
@@ -17,6 +18,7 @@ export async function proxy(request: NextRequest) {
   if (conConteo(ruta) && !antesDelLanzamiento()) return NextResponse.next();
 
   let respuesta = NextResponse.next({ request });
+  const recordar = quiereRecordar(request.cookies.get(COOKIE_RECORDAR)?.value);
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -27,7 +29,7 @@ export async function proxy(request: NextRequest) {
         setAll: (porGuardar, encabezados) => {
           porGuardar.forEach(({ name, value }) => request.cookies.set(name, value));
           respuesta = NextResponse.next({ request });
-          porGuardar.forEach(({ name, value, options }) => respuesta.cookies.set(name, value, options));
+          porGuardar.forEach(({ name, value, options }) => respuesta.cookies.set(name, value, opcionesCookie(options, recordar)));
           Object.entries(encabezados ?? {}).forEach(([k, v]) => respuesta.headers.set(k, v));
         },
       },
@@ -37,7 +39,11 @@ export async function proxy(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
 
   if (conConteo(ruta)) {
-    if (data?.claims) return respuesta; // proveedores y equipo NEC ya ven el directorio
+    if (data?.claims) {
+      // proveedores y equipo NEC ya ven el directorio; que el navegador no lo guarde para quien entre después
+      respuesta.headers.set("Cache-Control", "private, no-store");
+      return respuesta;
+    }
     const conteo = request.nextUrl.clone();
     conteo.pathname = "/proximamente";
     conteo.search = "";
@@ -53,6 +59,8 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(destino);
   }
   respuesta.headers.set("X-Robots-Tag", "noindex, nofollow");
+  // Páginas con sesión: nunca en la caché del navegador (botón «atrás» después de cerrar sesión).
+  respuesta.headers.set("Cache-Control", "private, no-store");
   return respuesta;
 }
 

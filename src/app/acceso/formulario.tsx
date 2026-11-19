@@ -1,8 +1,9 @@
 "use client";
 
-import { createBrowserClient } from "@supabase/ssr";
+import { guardarRecordar, supabaseNavegador } from "@/lib/supabase/navegador";
 import { useState } from "react";
 import { CampoContrasena } from "@/components/campo-contrasena";
+import { DIAS_RECORDAR } from "@/lib/supabase/cookies";
 
 const campo = "mt-1 w-full rounded border border-acero bg-white px-3 py-2.5 focus:border-marino focus:outline-none";
 
@@ -17,7 +18,8 @@ export function FormularioAcceso() {
     setError("");
     setEntrando(true);
     const fd = new FormData(e.currentTarget);
-    const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!);
+    guardarRecordar(fd.get("recordarme") === "on");
+    const supabase = supabaseNavegador();
     const { error: e2 } = await supabase.auth.signInWithPassword({
       email: String(fd.get("correo") ?? "").trim().toLowerCase(),
       password: String(fd.get("contrasena") ?? ""),
@@ -49,9 +51,13 @@ export function FormularioAcceso() {
     <form onSubmit={entrar} className="space-y-4">
       <label className="block">
         <span className="font-semibold">Correo</span>
-        <input name="correo" type="email" required autoComplete="username" className={campo} />
+        <input name="correo" type="email" required autoComplete="username" autoCapitalize="none" spellCheck={false} className={campo} />
       </label>
       <CampoContrasena name="contrasena" etiqueta="Contraseña" autoComplete="current-password" />
+      <label className="flex items-center gap-2">
+        <input type="checkbox" name="recordarme" defaultChecked className="h-4 w-4 accent-marino" />
+        <span className="text-sm">Recordarme en este dispositivo por {DIAS_RECORDAR} días</span>
+      </label>
       {error && <p className="text-red-700" role="alert">{error}</p>}
       <button disabled={entrando} className="etiqueta w-full rounded bg-marino py-3 text-humo hover:bg-pizarra disabled:opacity-60">
         {entrando ? "Entrando…" : "Entrar"}

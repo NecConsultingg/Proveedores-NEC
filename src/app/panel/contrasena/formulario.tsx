@@ -1,6 +1,6 @@
 "use client";
 
-import { createBrowserClient } from "@supabase/ssr";
+import { supabaseNavegador } from "@/lib/supabase/navegador";
 import { useState } from "react";
 import { CampoContrasena } from "@/components/campo-contrasena";
 
@@ -22,7 +22,7 @@ export function FormularioContrasena({ correo, proveedor = false }: { correo: st
     if (/^nec-/i.test(nueva)) return setEstado({ ok: false, mensaje: "Elige una contraseña tuya, distinta a la temporal." });
 
     setGuardando(true);
-    const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!);
+    const supabase = supabaseNavegador();
     const { error } = await supabase.auth.updateUser({ password: nueva });
     if (!error) {
       if (proveedor) {

@@ -1,6 +1,7 @@
 import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { COOKIE_RECORDAR, opcionesCookie, quiereRecordar } from "./cookies";
 
 // Cliente de Supabase con la sesión del usuario (cookies). Se crea uno nuevo en cada petición.
 export async function supabaseConSesion() {
@@ -10,7 +11,7 @@ export async function supabaseConSesion() {
       getAll: () => almacen.getAll(),
       setAll: (porGuardar) => {
         try {
-          porGuardar.forEach(({ name, value, options }) => almacen.set(name, value, options));
+          porGuardar.forEach(({ name, value, options }) => almacen.set(name, value, opcionesCookie(options, quiereRecordar(almacen.get(COOKIE_RECORDAR)?.value))));
         } catch {
           // Desde un Server Component no se pueden escribir cookies; el proxy ya refresca la sesión.
         }

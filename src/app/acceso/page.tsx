@@ -23,6 +23,7 @@ export default function Acceso({ searchParams }: PageProps<"/acceso">) {
         <FormularioAcceso />
       </div>
       <div className="mt-6 space-y-2 text-sm">
+        <p className="text-pizarra">En una computadora compartida, desmarca «Recordarme» y cierra sesión al terminar.</p>
         <p>
           <b>Proveedores:</b> si olvidaste tu contraseña, escríbele al equipo NEC y te mandamos una temporal nueva.
         </p>

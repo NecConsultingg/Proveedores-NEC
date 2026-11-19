@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@supabase/supabase-js";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { supabaseConSesion } from "@/lib/supabase/servidor";
@@ -54,5 +55,7 @@ export async function enviarEnlace(_prev: EstadoAcceso, fd: FormData): Promise<E
 export async function salir() {
   const supabase = await supabaseConSesion();
   await supabase.auth.signOut();
+  // Vacía la caché del navegador (router de Next) para que no queden a la vista páginas de la sesión anterior.
+  revalidatePath("/", "layout");
   redirect("/acceso");
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { createBrowserClient } from "@supabase/ssr";
+import { supabaseNavegador } from "@/lib/supabase/navegador";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
@@ -29,10 +29,7 @@ export function Confirmar() {
       );
       return;
     }
-    const supabase = createBrowserClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-    );
+    const supabase = supabaseNavegador();
     supabase.auth
       .setSession({ access_token: accessToken, refresh_token: refreshToken })
       .then(({ error: e }) => {

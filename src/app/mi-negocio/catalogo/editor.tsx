@@ -1,6 +1,6 @@
 "use client";
 
-import { createBrowserClient } from "@supabase/ssr";
+import { supabaseNavegador } from "@/lib/supabase/navegador";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { comprimirFoto } from "@/lib/foto";
@@ -27,7 +27,7 @@ const ESTADO: Record<ItemCatalogo["estado"], { texto: string; clase: string }> =
 };
 
 const supabase = () =>
-  createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!);
+  supabaseNavegador();
 
 // Ruta dentro del bucket a partir de la URL pública (…/object/public/catalogo/<ruta>).
 const rutaDe = (url: string | null | undefined) => url?.split("/object/public/catalogo/")[1];
